@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crime Product Daily Report</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px 8px 0 0;
+        }
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+        }
+        .header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 4px solid #667eea;
+        }
+        .card.success {
+            border-left-color: #10b981;
+        }
+        .card.warning {
+            border-left-color: #f59e0b;
+        }
+        .card.error {
+            border-left-color: #ef4444;
+        }
+        .card-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #6b7280;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .card-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .section {
+            padding: 30px;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .section-header h2 {
+            margin: 0;
+            font-size: 20px;
+            color: #1f2937;
+        }
+        .status-badge {
+            margin-left: auto;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-badge.healthy {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .status-badge.alert {
+            background: #fed7aa;
+            color: #92400e;
+        }
+        .status-badge.critical {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th {
+            background: #f9fafb;
+            text-align: left;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 14px;
+        }
+        tr:hover {
+            background: #f9fafb;
+        }
+        .metric-value {
+            font-weight: 600;
+        }
+        .trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .trend.up {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .trend.down {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .trend.stable {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+        .anomaly-icon {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .anomaly-icon.normal {
+            background: #10b981;
+        }
+        .anomaly-icon.warning {
+            background: #f59e0b;
+        }
+        .anomaly-icon.critical {
+            background: #ef4444;
+        }
+        .footer {
+            padding: 20px 30px;
+            background: #f9fafb;
+            border-radius: 0 0 8px 8px;
+            font-size: 12px;
+            color: #6b7280;
+            text-align: center;
+        }
+        .source-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .source-status.available {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .source-status.unavailable {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .subsection {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .subsection h3 {
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            color: #374151;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #10b981;
+            transition: width 0.3s;
+        }
+        .progress-fill.warning {
+            background: #f59e0b;
+        }
+        .progress-fill.critical {
+            background: #ef4444;
+        }
+        .quality-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .quality-metric:last-child {
+            border-bottom: none;
+        }
+        .quality-label {
+            font-size: 14px;
+            color: #374151;
+        }
+        .quality-value {
+            font-weight: 600;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>💼 Crime Insurance - Daily Pipeline Report</h1>
+            <p>Report Date: Tuesday, November 25, 2025 | Generated at 08:00 AM EST</p>
+        </div>
+
+        <!-- Executive Summary Cards -->
+        <div class="summary-cards">
+            <div class="card success">
+                <div class="card-title">Source Data Status</div>
+                <div class="card-value">✓ Online</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Total Business Accounts</div>
+                <div class="card-value">4,523</div>
+            </div>
+            <div class="card success">
+                <div class="card-title">Qualified Prospects</div>
+                <div class="card-value">2,134</div>
+            </div>
+            <div class="card warning">
+                <div class="card-title">Quotes Generated</div>
+                <div class="card-value">156</div>
+            </div>
+        </div>
+
+        <!-- Source System Status -->
+        <div class="section">
+            <div class="section-header">
+                <h2>📊 Data Source Health Check</h2>
+                <span class="status-badge healthy">All Systems Operational</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data Source</th>
+                        <th>Availability</th>
+                        <th>Records Received</th>
+                        <th>Last Refresh Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Daily New Submissions</td>
+                        <td><span class="source-status available">✓ Available</span></td>
+                        <td class="metric-value">1,247</td>
+                        <td>07:45 AM</td>
+                    </tr>
+                    <tr>
+                        <td>DOCAT System Feed</td>
+                        <td><span class="source-status available">✓ Available</span></td>
+                        <td class="metric-value">856</td>
+                        <td>07:30 AM</td>
+                    </tr>
+                    <tr>
+                        <td>P360 Account Database</td>
+                        <td><span class="source-status available">✓ Available</span></td>
+                        <td class="metric-value">2,420</td>
+                        <td>07:15 AM</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pipeline Overview -->
+        <div class="section" style="background: #fafbfc;">
+            <div class="section-header">
+                <h2>🎯 Sales Pipeline Overview</h2>
+                <span class="status-badge alert">1 Metric Below Target</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pipeline Stage</th>
+                        <th>Current Count</th>
+                        <th>7-Day Average</th>
+                        <th>Change vs Average</th>
+                        <th>Health Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Total Business Accounts</strong></td>
+                        <td class="metric-value">4,523</td>
+                        <td>4,450</td>
+                        <td><span class="trend up">↑ 1.6%</span></td>
+                        <td><span class="anomaly-icon normal"></span>Within Range</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Qualified for Review</strong></td>
+                        <td class="metric-value">3,876</td>
+                        <td>3,820</td>
+                        <td><span class="trend up">↑ 1.5%</span></td>
+                        <td><span class="anomaly-icon normal"></span>Within Range</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Target Market Prospects</strong></td>
+                        <td class="metric-value">2,134</td>
+                        <td>2,200</td>
+                        <td><span class="trend down">↓ 3.0%</span></td>
+                        <td><span class="anomaly-icon normal"></span>Within Range</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Rejections</strong></td>
+                        <td class="metric-value">1,742</td>
+                        <td>1,620</td>
+                        <td><span class="trend up">↑ 7.5%</span></td>
+                        <td><span class="anomaly-icon normal"></span>Within Range</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Eligible Accounts Quality -->
+        <div class="section">
+            <div class="section-header">
+                <h2>✅ Account Qualification Criteria</h2>
+                <span class="status-badge healthy">Data Quality: 94%</span>
+            </div>
+            
+            <div class="subsection">
+                <h3>Accounts Qualified for Review - Data Completeness</h3>
+                <p style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">
+                    Measures how many accounts have complete information required for underwriting assessment
+                </p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Required Data Field</th>
+                            <th>Accounts with Data</th>
+                            <th>Completeness %</th>
+                            <th>Missing Records</th>
+                            <th>Quality Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Valid Business Identifier (D&B Number)</td>
+                            <td class="metric-value">4,523 / 4,523</td>
+                            <td><span class="trend stable">100%</span></td>
+                            <td>0</td>
+                            <td><span class="anomaly-icon normal"></span>Excellent</td>
+                        </tr>
+                        <tr>
+                            <td>Company Type Classification</td>
+                            <td class="metric-value">4,489 / 4,523</td>
+                            <td><span class="trend stable">99.2%</span></td>
+                            <td>34</td>
+                            <td><span class="anomaly-icon normal"></span>Excellent</td>
+                        </tr>
+                        <tr>
+                            <td>Annual Revenue Information</td>
+                            <td class="metric-value">4,398 / 4,523</td>
+                            <td><span class="trend stable">97.2%</span></td>
+                            <td>125</td>
+                            <td><span class="anomaly-icon normal"></span>Good</td>
+                        </tr>
+                        <tr>
+                            <td>Underwriting Risk Exclusions Check</td>
+                            <td class="metric-value">4,156 / 4,523</td>
+                            <td><span class="trend down">91.9%</span></td>
+                            <td>367</td>
+                            <td><span class="anomaly-icon warning"></span>Acceptable</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 25px; padding: 15px; background: white; border-radius: 6px;">
+                    <div class="quality-metric">
+                        <span class="quality-label">Overall Qualification Rate</span>
+                        <span class="quality-value" style="color: #10b981;">85.7% (3,876 / 4,523)</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 85.7%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsection" style="margin-top: 20px;">
+                <h3>Rejection Analysis by Business Rule</h3>
+                <p style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">
+                    Breakdown of accounts excluded from the qualified pool and reasons
+                </p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rejection Reason</th>
+                            <th>Account Count</th>
+                            <th>% of Total</th>
+                            <th>Change vs Average</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Missing Business Identifier</td>
+                            <td class="metric-value">0</td>
+                            <td>0%</td>
+                            <td><span class="trend stable">→ 0%</span></td>
+                        </tr>
+                        <tr>
+                            <td>Company Type Not Available</td>
+                            <td class="metric-value">34</td>
+                            <td>0.8%</td>
+                            <td><span class="trend up">↑ 12%</span></td>
+                        </tr>
+                        <tr>
+                            <td>Revenue Data Missing</td>
+                            <td class="metric-value">125</td>
+                            <td>2.8%</td>
+                            <td><span class="trend down">↓ 5%</span></td>
+                        </tr>
+                        <tr>
+                            <td>Failed Risk Exclusion Screening</td>
+                            <td class="metric-value">367</td>
+                            <td>8.1%</td>
+                            <td><span class="trend up">↑ 15%</span></td>
+                        </tr>
+                        <tr>
+                            <td>Other Data Quality Issues</td>
+                            <td class="metric-value">121</td>
+                            <td>2.7%</td>
+                            <td><span class="trend stable">→ 2%</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Target Accounts Quality -->
+        <div class="section" style="background: #fafbfc;">
+            <div class="section-header">
+                <h2>🎯 Target Market Analysis</h2>
+                <span class="status-badge healthy">Targeting Precision: 55.1%</span>
+            </div>
+            
+            <div class="subsection">
+                <h3>Target Market Prospects - Business Profile Match</h3>
+                <p style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">
+                    Analysis of accounts matching our ideal customer profile and underwriting appetite
+                </p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Targeting Criteria</th>
+                            <th>Accounts Matching</th>
+                            <th>Match Rate</th>
+                            <th>Excluded Count</th>
+                            <th>Performance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Industry Classification Match</td>
+                            <td class="metric-value">2,945 / 3,876</td>
+                            <td><span class="trend stable">76.0%</span></td>
+                            <td>931</td>
+                            <td><span class="anomaly-icon normal"></span>On Target</td>
+                        </tr>
+                        <tr>
+                            <td>Revenue Within Appetite Range</td>
+                            <td class="metric-value">3,234 / 3,876</td>
+                            <td><span class="trend stable">83.4%</span></td>
+                            <td>642</td>
+                            <td><span class="anomaly-icon normal"></span>On Target</td>
+                        </tr>
+                        <tr>
+                            <td>Business Size (Employees > 1)</td>
+                            <td class="metric-value">3,678 / 3,876</td>
+                            <td><span class="trend stable">94.9%</span></td>
+                            <td>198</td>
+                            <td><span class="anomaly-icon normal"></span>Excellent</td>
+                        </tr>
+                        <tr>
+                            <td>Private Company Status</td>
+                            <td class="metric-value">3,512 / 3,876</td>
+                            <td><span class="trend stable">90.6%</span></td>
+                            <td>364</td>
+                            <td><span class="anomaly-icon normal"></span>On Target</td>
+                        </tr>
+                        <tr>
+                            <td><strong>All Criteria Met (Final Targets)</strong></td>
+                            <td class="metric-value"><strong>2,134 / 3,876</strong></td>
+                            <td><span class="trend stable"><strong>55.1%</strong></span></td>
+                            <td><strong>1,742</strong></td>
+                            <td><span class="anomaly-icon normal"></span><strong>Within Range</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 25px; padding: 15px; background: white; border-radius: 6px;">
+                    <div class="quality-metric">
+                        <span class="quality-label">Target Prospect Conversion Rate</span>
+                        <span class="quality-value" style="color: #10b981;">47.2% (2,134 / 4,523)</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 47.2%"></div>
+                    </div>
+                    <p style="font-size: 12px; color: #6b7280; margin-top: 10px;">
+                        From total accounts to final target prospects (industry + revenue + size + company type match)
+                    </p>
+                </div>
+            </div>
+
+            <div class="subsection" style="margin-top: 20px;">
+                <h3>Target Exclusion Breakdown</h3>
+                <p style="color: #6b7280; font-size: 13px; margin-bottom: 20px;">
+                    Qualified accounts excluded from target market due to business criteria
+                </p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Exclusion Reason</th>
+                            <th>Account Count</th>
+                            <th>% of Qualified</th>
+                            <th>Change vs Average</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Industry Not in Appetite</td>
+                            <td class="metric-value">931</td>
+                            <td>24.0%</td>
+                            <td><span class="trend stable">→ 1%</span></td>
+                        </tr>
+                        <tr>
+                            <td>Revenue Outside Target Range</td>
+                            <td class="metric-value">642</td>
+                            <td>16.6%</td>
+                            <td><span class="trend up">↑ 8%</span></td>
+                        </tr>
+                        <tr>
+                            <td>Single Employee Business</td>
+                            <td class="metric-value">198</td>
+                            <td>5.1%</td>
+                            <td><span class="trend down">↓ 3%</span></td>
+                        </tr>
+                        <tr>
+                            <td>Public Company</td>
+                            <td class="metric-value">364</td>
+                            <td>9.4%</td>
+                            <td><span class="trend stable">→ 0%</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Quote Activity -->
+        <div class="section">
+            <div class="section-header">
+                <h2>📄 Quote Generation Activity</h2>
+                <span class="status-badge alert">Below Average Performance</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Quote Status</th>
+                        <th>Current Count</th>
+                        <th>7-Day Average</th>
+                        <th>Change vs Average</th>
+                        <th>Performance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Quotes Successfully Sent</td>
+                        <td class="metric-value">156</td>
+                        <td>180</td>
+                        <td><span class="trend down">↓ 13.3%</span></td>
+                        <td><span class="anomaly-icon warning"></span>Below Target</td>
+                    </tr>
+                    <tr>
+                        <td>Quotes Pending Delivery</td>
+                        <td class="metric-value">23</td>
+                        <td>18</td>
+                        <td><span class="trend up">↑ 27.8%</span></td>
+                        <td><span class="anomaly-icon normal"></span>Within Range</td>
+                    </tr>
+                    <tr>
+                        <td>Failed Quote Generation</td>
+                        <td class="metric-value">8</td>
+                        <td>5</td>
+                        <td><span class="trend up">↑ 60%</span></td>
+                        <td><span class="anomaly-icon warning"></span>Above Average</td>
+                    </tr>
+                    <tr>
+                        <td>Email Opt-Out (Not Contactable)</td>
+                        <td class="metric-value">134</td>
+                        <td>128</td>
+                        <td><span class="trend up">↑ 4.7%</span></td>
+                        <td><span class="anomaly-icon normal"></span>Within Range</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 25px; padding: 20px; background: #fff7ed; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                <h4 style="margin: 0 0 10px 0; color: #92400e;">⚠️ Attention Required</h4>
+                <ul style="margin: 0; padding-left: 20px; color: #78350f;">
+                    <li>Quote generation is 13.3% below the 7-day average</li>
+                    <li>Failed quotes increased by 60% - investigate technical issues</li>
+                    <li>Review quote generation process and error logs for today</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Action Items -->
+        <div class="section" style="background: #fafbfc;">
+            <div class="section-header">
+                <h2>📋 Recommended Actions</h2>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Priority</th>
+                        <th>Issue Identified</th>
+                        <th>Impact</th>
+                        <th>Recommended Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="status-badge alert">Medium</span></td>
+                        <td>Quote generation below average</td>
+                        <td>24 fewer quotes sent vs. daily target</td>
+                        <td>Review automated quote workflow and system performance</td>
+                    </tr>
+                    <tr>
+                        <td><span class="status-badge alert">Medium</span></td>
+                        <td>Failed quotes increased 60%</td>
+                        <td>Potential revenue loss from 3 additional failures</td>
+                        <td>Check error logs and quote generation API connectivity</td>
+                    </tr>
+                    <tr>
+                        <td><span class="status-badge healthy">Low</span></td>
+                        <td>Risk exclusion rejections up 15%</td>
+                        <td>55 more accounts excluded from qualification</td>
+                        <td>Monitor trend over next 3 days; review exclusion criteria if continues</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Report Methodology:</strong> This report monitors daily sales pipeline health for Crime Insurance product. 
+            Anomalies are flagged when metrics deviate ±15% (warning) or ±30% (critical) from 7-day rolling averages.</p>
+            <p style="margin-top: 10px;"><strong>Data Quality Threshold:</strong> Accounts must have ≥90% data completeness to be considered "Qualified for Review"</p>
+            <p style="margin-top: 10px;">Questions? Contact Sales Operations Team | Automated Report System v2.0</p>
+        </div>
+    </div>
+</body>
+</html>
