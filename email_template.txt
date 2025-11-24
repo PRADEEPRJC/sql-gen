@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Prospect Pipeline Report</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px 8px 0 0;
+        }
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+        }
+        .header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 4px solid #667eea;
+        }
+        .card.success {
+            border-left-color: #10b981;
+        }
+        .card.warning {
+            border-left-color: #f59e0b;
+        }
+        .card.error {
+            border-left-color: #ef4444;
+        }
+        .card-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #6b7280;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .card-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .section {
+            padding: 30px;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .section-header h2 {
+            margin: 0;
+            font-size: 20px;
+            color: #1f2937;
+        }
+        .status-badge {
+            margin-left: auto;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-badge.healthy {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .status-badge.alert {
+            background: #fed7aa;
+            color: #92400e;
+        }
+        .status-badge.critical {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th {
+            background: #f9fafb;
+            text-align: left;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 14px;
+        }
+        tr:hover {
+            background: #f9fafb;
+        }
+        .metric-value {
+            font-weight: 600;
+        }
+        .trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .trend.up {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .trend.down {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .trend.stable {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+        .anomaly-icon {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .anomaly-icon.normal {
+            background: #10b981;
+        }
+        .anomaly-icon.warning {
+            background: #f59e0b;
+        }
+        .anomaly-icon.critical {
+            background: #ef4444;
+        }
+        .footer {
+            padding: 20px 30px;
+            background: #f9fafb;
+            border-radius: 0 0 8px 8px;
+            font-size: 12px;
+            color: #6b7280;
+            text-align: center;
+        }
+        .source-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .source-status.available {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .source-status.unavailable {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .collapsible {
+            margin-top: 20px;
+        }
+        .product-group {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📊 Daily Prospect Pipeline Report</h1>
+            <p>Report Date: Tuesday, November 25, 2025 | Generated at 08:00 AM EST</p>
+        </div>
+
+        <!-- Executive Summary Cards -->
+        <div class="summary-cards">
+            <div class="card success">
+                <div class="card-title">Data Sources Online</div>
+                <div class="card-value">9/10</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Total Prospects</div>
+                <div class="card-value">12,458</div>
+            </div>
+            <div class="card warning">
+                <div class="card-title">Anomalies Detected</div>
+                <div class="card-value">3</div>
+            </div>
+            <div class="card success">
+                <div class="card-title">Quotes Sent Today</div>
+                <div class="card-value">347</div>
+            </div>
+        </div>
+
+        <!-- Source System Status -->
+        <div class="section">
+            <div class="section-header">
+                <h2>🔌 Source System Status</h2>
+                <span class="status-badge healthy">9 of 10 Available</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Source</th>
+                        <th>Status</th>
+                        <th>Records Today</th>
+                        <th>Last Updated</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Daily Submissions</td>
+                        <td><span class="source-status available">✓ Available</span></td>
+                        <td class="metric-value">1,247</td>
+                        <td>07:45 AM</td>
+                    </tr>
+                    <tr>
+                        <td>DOCAT - New Submissions</td>
+                        <td><span class="source-status available">✓ Available</span></td>
+                        <td class="metric-value">856</td>
+                        <td>07:30 AM</td>
+                    </tr>
+                    <tr>
+                        <td>P360 Account Table</td>
+                        <td><span class="source-status unavailable">✗ Delayed</span></td>
+                        <td class="metric-value">0</td>
+                        <td>Pending</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Finlines Products -->
+        <div class="section">
+            <div class="section-header">
+                <h2>💼 Finlines Products</h2>
+                <span class="status-badge healthy">Healthy</span>
+            </div>
+            
+            <div class="product-group">
+                <h3 style="color: #667eea; margin-bottom: 15px;">Crime</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Today</th>
+                            <th>7-Day Avg</th>
+                            <th>Variance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Total Accounts</td>
+                            <td class="metric-value">4,523</td>
+                            <td>4,450</td>
+                            <td><span class="trend up">↑ 1.6%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                        <tr>
+                            <td>Eligible Accounts</td>
+                            <td class="metric-value">3,876</td>
+                            <td>3,820</td>
+                            <td><span class="trend up">↑ 1.5%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                        <tr>
+                            <td>Target Accounts</td>
+                            <td class="metric-value">2,134</td>
+                            <td>2,200</td>
+                            <td><span class="trend down">↓ 3.0%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                        <tr>
+                            <td>Total Quotes Sent</td>
+                            <td class="metric-value">156</td>
+                            <td>180</td>
+                            <td><span class="trend down">↓ 13.3%</span></td>
+                            <td><span class="anomaly-icon warning"></span>Below Average</td>
+                        </tr>
+                        <tr>
+                            <td>Pending Quotes</td>
+                            <td class="metric-value">23</td>
+                            <td>18</td>
+                            <td><span class="trend up">↑ 27.8%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                        <tr>
+                            <td>Failed Quotes</td>
+                            <td class="metric-value">8</td>
+                            <td>5</td>
+                            <td><span class="trend up">↑ 60%</span></td>
+                            <td><span class="anomaly-icon warning"></span>High</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="product-group">
+                <h3 style="color: #667eea; margin-bottom: 15px;">EPL (Employment Practices Liability)</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Today</th>
+                            <th>7-Day Avg</th>
+                            <th>Variance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Total Accounts</td>
+                            <td class="metric-value">3,245</td>
+                            <td>3,180</td>
+                            <td><span class="trend up">↑ 2.0%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                        <tr>
+                            <td>Eligible Accounts</td>
+                            <td class="metric-value">2,890</td>
+                            <td>2,850</td>
+                            <td><span class="trend up">↑ 1.4%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                        <tr>
+                            <td>Target Accounts</td>
+                            <td class="metric-value">1,567</td>
+                            <td>1,520</td>
+                            <td><span class="trend up">↑ 3.1%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                        <tr>
+                            <td>Total Quotes Sent</td>
+                            <td class="metric-value">98</td>
+                            <td>105</td>
+                            <td><span class="trend down">↓ 6.7%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="product-group">
+                <h3 style="color: #667eea; margin-bottom: 15px;">Fiduciary</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Today</th>
+                            <th>7-Day Avg</th>
+                            <th>Variance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Total Accounts</td>
+                            <td class="metric-value">1,876</td>
+                            <td>1,920</td>
+                            <td><span class="trend down">↓ 2.3%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                        <tr>
+                            <td>Eligible Accounts</td>
+                            <td class="metric-value">1,654</td>
+                            <td>1,680</td>
+                            <td><span class="trend down">↓ 1.5%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                        <tr>
+                            <td>Target Accounts</td>
+                            <td class="metric-value">1,234</td>
+                            <td>1,250</td>
+                            <td><span class="trend stable">→ 1.3%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Solicitations -->
+        <div class="section" style="background: #fafbfc;">
+            <div class="section-header">
+                <h2>📧 Solicitations</h2>
+                <span class="status-badge alert">1 Anomaly</span>
+            </div>
+
+            <div class="product-group">
+                <h3 style="color: #667eea; margin-bottom: 15px;">Multinational</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Today</th>
+                            <th>7-Day Avg</th>
+                            <th>Variance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Eligible Accounts</td>
+                            <td class="metric-value">567</td>
+                            <td>580</td>
+                            <td><span class="trend down">↓ 2.2%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                        <tr>
+                            <td>Target Accounts</td>
+                            <td class="metric-value">234</td>
+                            <td>245</td>
+                            <td><span class="trend down">↓ 4.5%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="product-group">
+                <h3 style="color: #667eea; margin-bottom: 15px;">Cargo</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Today</th>
+                            <th>7-Day Avg</th>
+                            <th>Variance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Eligible Accounts</td>
+                            <td class="metric-value">423</td>
+                            <td>820</td>
+                            <td><span class="trend down">↓ 48.4%</span></td>
+                            <td><span class="anomaly-icon critical"></span>Critical Drop</td>
+                        </tr>
+                        <tr>
+                            <td>Target Accounts</td>
+                            <td class="metric-value">178</td>
+                            <td>380</td>
+                            <td><span class="trend down">↓ 53.2%</span></td>
+                            <td><span class="anomaly-icon critical"></span>Critical Drop</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="product-group">
+                <h3 style="color: #667eea; margin-bottom: 15px;">Workers Compensation</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Today</th>
+                            <th>7-Day Avg</th>
+                            <th>Variance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Eligible Accounts</td>
+                            <td class="metric-value">1,234</td>
+                            <td>1,200</td>
+                            <td><span class="trend up">↑ 2.8%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                        <tr>
+                            <td>Target Accounts</td>
+                            <td class="metric-value">890</td>
+                            <td>875</td>
+                            <td><span class="trend up">↑ 1.7%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Other Products -->
+        <div class="section">
+            <div class="section-header">
+                <h2>🛡️ Other Products</h2>
+                <span class="status-badge healthy">Healthy</span>
+            </div>
+
+            <div class="product-group">
+                <h3 style="color: #667eea; margin-bottom: 15px;">Cyber</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Today</th>
+                            <th>7-Day Avg</th>
+                            <th>Variance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Eligible Accounts</td>
+                            <td class="metric-value">678</td>
+                            <td>650</td>
+                            <td><span class="trend up">↑ 4.3%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                        <tr>
+                            <td>Target Accounts</td>
+                            <td class="metric-value">456</td>
+                            <td>445</td>
+                            <td><span class="trend up">↑ 2.5%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                        <tr>
+                            <td>Quote Sent</td>
+                            <td class="metric-value">67</td>
+                            <td>70</td>
+                            <td><span class="trend down">↓ 4.3%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                        <tr>
+                            <td>Referral</td>
+                            <td class="metric-value">12</td>
+                            <td>10</td>
+                            <td><span class="trend up">↑ 20%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                        <tr>
+                            <td>Declined</td>
+                            <td class="metric-value">5</td>
+                            <td>6</td>
+                            <td><span class="trend down">↓ 16.7%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="product-group">
+                <h3 style="color: #667eea; margin-bottom: 15px;">Product Recall</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Today</th>
+                            <th>7-Day Avg</th>
+                            <th>Variance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Eligible Accounts</td>
+                            <td class="metric-value">345</td>
+                            <td>330</td>
+                            <td><span class="trend up">↑ 4.5%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                        <tr>
+                            <td>Target Accounts</td>
+                            <td class="metric-value">223</td>
+                            <td>215</td>
+                            <td><span class="trend up">↑ 3.7%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                        <tr>
+                            <td>Quotes Sent</td>
+                            <td class="metric-value">34</td>
+                            <td>38</td>
+                            <td><span class="trend down">↓ 10.5%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                        <tr>
+                            <td>Indications Sent</td>
+                            <td class="metric-value">18</td>
+                            <td>15</td>
+                            <td><span class="trend up">↑ 20%</span></td>
+                            <td><span class="anomaly-icon normal"></span>Normal</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Action Items -->
+        <div class="section" style="background: #fff7ed;">
+            <div class="section-header">
+                <h2>⚠️ Action Items</h2>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Priority</th>
+                        <th>Product</th>
+                        <th>Issue</th>
+                        <th>Recommendation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="status-badge critical">High</span></td>
+                        <td>P360 Account Table</td>
+                        <td>Source data delayed - no records received</td>
+                        <td>Check ETL pipeline and source system connectivity</td>
+                    </tr>
+                    <tr>
+                        <td><span class="status-badge critical">High</span></td>
+                        <td>Cargo</td>
+                        <td>Eligible accounts dropped 48% from 7-day average</td>
+                        <td>Investigate data quality filters and D&B validation</td>
+                    </tr>
+                    <tr>
+                        <td><span class="status-badge alert">Medium</span></td>
+                        <td>Crime (Finlines)</td>
+                        <td>Failed quotes increased 60% vs average</td>
+                        <td>Review quote generation process and error logs</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Report Information:</strong> This automated report monitors daily prospect pipeline health across all products. 
+            Anomalies are detected using 7-day rolling averages with ±15% variance threshold for warnings and ±30% for critical alerts.</p>
+            <p style="margin-top: 10px;">Questions? Contact the Data Analytics Team | Generated by Prospect Pipeline Monitor v2.0</p>
+        </div>
+    </div>
+</body>
+</html>
