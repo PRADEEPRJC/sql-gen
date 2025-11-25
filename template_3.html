@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crime Product - 5 Comparison Views</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f7fa; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 8px 8px 0 0; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .section { padding: 30px; border-bottom: 2px solid #f0f0f0; }
+        .section:last-child { border-bottom: none; }
+        .section h2 { margin: 0 0 20px 0; font-size: 18px; color: #1f2937; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
+        
+        /* Style 1: Inline Metrics */
+        .inline-metrics { display: flex; gap: 15px; flex-wrap: wrap; }
+        .inline-metric { flex: 1; min-width: 200px; padding: 15px; background: #f9fafb; border-radius: 6px; border-left: 4px solid #667eea; }
+        .inline-metric h4 { margin: 0 0 8px 0; font-size: 12px; color: #6b7280; text-transform: uppercase; }
+        .inline-metric .value { font-size: 24px; font-weight: bold; color: #1f2937; margin-bottom: 8px; }
+        .inline-metric .compare { font-size: 11px; color: #6b7280; }
+        .inline-metric .compare span { display: inline-block; margin-right: 12px; }
+        .delta { font-weight: 600; padding: 2px 6px; border-radius: 3px; }
+        .delta.up { background: #d1fae5; color: #065f46; }
+        .delta.down { background: #fee2e2; color: #991b1b; }
+        .delta.neutral { background: #e0e7ff; color: #3730a3; }
+
+        /* Style 2: Compact Table */
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th { background: #f9fafb; padding: 10px; text-align: left; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb; }
+        td { padding: 10px; border-bottom: 1px solid #f3f4f6; }
+        tr:hover { background: #f9fafb; }
+        .metric-name { font-weight: 600; color: #1f2937; }
+        .current-val { font-size: 16px; font-weight: bold; color: #667eea; }
+
+        /* Style 3: Visual Cards */
+        .visual-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+        .v-card { background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%); padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; }
+        .v-card h4 { margin: 0 0 10px 0; font-size: 13px; color: #6b7280; }
+        .v-card .big-num { font-size: 32px; font-weight: bold; color: #1f2937; margin-bottom: 12px; }
+        .mini-compare { display: flex; justify-content: space-between; padding: 6px 0; border-top: 1px solid #e5e7eb; font-size: 11px; }
+        .mini-compare:first-child { border-top: none; }
+        .mini-compare .label { color: #6b7280; }
+        .mini-compare .val { font-weight: 600; }
+
+        /* Style 4: Sparkline Style */
+        .sparkline-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f3f4f6; }
+        .sparkline-row:last-child { border-bottom: none; }
+        .spark-label { flex: 0 0 180px; font-weight: 600; color: #1f2937; font-size: 14px; }
+        .spark-current { flex: 0 0 100px; font-size: 20px; font-weight: bold; color: #667eea; }
+        .spark-compares { flex: 1; display: flex; gap: 20px; font-size: 12px; }
+        .spark-item { display: flex; flex-direction: column; }
+        .spark-item .label { color: #6b7280; font-size: 10px; }
+        .spark-item .value { font-weight: 600; color: #374151; }
+
+        /* Style 5: Progress Bars */
+        .progress-section { }
+        .progress-item { margin-bottom: 20px; }
+        .progress-item:last-child { margin-bottom: 0; }
+        .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .progress-header h4 { margin: 0; font-size: 14px; font-weight: 600; color: #1f2937; }
+        .progress-header .curr { font-size: 20px; font-weight: bold; color: #667eea; }
+        .progress-bar { height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); border-radius: 4px; }
+        .progress-compare { display: flex; gap: 15px; font-size: 11px; color: #6b7280; }
+        .progress-compare span { display: flex; align-items: center; gap: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💼 Crime Insurance - Daily Comparison Report</h1>
+            <p>November 25, 2025 | 5 Different View Styles</p>
+        </div>
+
+        <!-- STYLE 1: Inline Metrics with Deltas -->
+        <div class="section">
+            <h2>Style 1: Inline Metrics with Delta Indicators</h2>
+            
+            <h3 style="margin: 0 0 15px 0; font-size: 14px; color: #667eea;">1️⃣ Data Feed Status</h3>
+            <div class="inline-metrics">
+                <div class="inline-metric">
+                    <h4>Daily Submissions</h4>
+                    <div class="value">1,247</div>
+                    <div class="compare">
+                        <span>vs Yday: <span class="delta up">+5.2%</span></span>
+                        <span>vs 7D: <span class="delta up">+2.1%</span></span>
+                        <span>vs 30D: <span class="delta down">-1.3%</span></span>
+                    </div>
+                </div>
+                <div class="inline-metric">
+                    <h4>DOCAT Feed</h4>
+                    <div class="value">856</div>
+                    <div class="compare">
+                        <span>vs Yday: <span class="delta neutral">+0.5%</span></span>
+                        <span>vs 7D: <span class="delta up">+3.2%</span></span>
+                        <span>vs 30D: <span class="delta up">+1.8%</span></span>
+                    </div>
+                </div>
+                <div class="inline-metric">
+                    <h4>P360 Accounts</h4>
+                    <div class="value">2,420</div>
+                    <div class="compare">
+                        <span>vs Yday: <span class="delta down">-2.8%</span></span>
+                        <span>vs 7D: <span class="delta neutral">-0.9%</span></span>
+                        <span>vs 30D: <span class="delta up">+4.1%</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin: 25px 0 15px 0; font-size: 14px; color: #667eea;">2️⃣ Opportunity Funnel Snapshot</h3>
+            <div class="inline-metrics">
+                <div class="inline-metric">
+                    <h4>Total Accounts</h4>
+                    <div class="value">4,523</div>
+                    <div class="compare">
+                        <span>vs Yday: <span class="delta up">+1.6%</span></span>
+                        <span>vs 7D: <span class="delta up">+1.6%</span></span>
+                        <span>vs 30D: <span class="delta up">+3.8%</span></span>
+                    </div>
+                </div>
+                <div class="inline-metric">
+                    <h4>Qualified Prospects</h4>
+                    <div class="value">3,876</div>
+                    <div class="compare">
+                        <span>vs Yday: <span class="delta up">+2.1%</span></span>
+                        <span>vs 7D: <span class="delta up">+1.5%</span></span>
+                        <span>vs 30D: <span class="delta up">+2.9%</span></span>
+                    </div>
+                </div>
+                <div class="inline-metric">
+                    <h4>Target Market</h4>
+                    <div class="value">2,134</div>
+                    <div class="compare">
+                        <span>vs Yday: <span class="delta down">-3.5%</span></span>
+                        <span>vs 7D: <span class="delta down">-3.0%</span></span>
+                        <span>vs 30D: <span class="delta neutral">-1.2%</span></span>
+                    </div>
+                </div>
+                <div class="inline-metric">
+                    <h4>Quotes Sent</h4>
+                    <div class="value">156</div>
+                    <div class="compare">
+                        <span>vs Yday: <span class="delta down">-8.2%</span></span>
+                        <span>vs 7D: <span class="delta down">-13.3%</span></span>
+                        <span>vs 30D: <span class="delta down">-6.5%</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STYLE 2: Compact Table -->
+        <div class="section" style="background: #fafbfc;">
+            <h2>Style 2: Compact Comparison Table</h2>
+            
+            <h3 style="margin: 0 0 10px 0; font-size: 14px; color: #667eea;">1️⃣ Data Feed Status</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data Source</th>
+                        <th>Today</th>
+                        <th>Yesterday</th>
+                        <th>7-Day Avg</th>
+                        <th>30-Day Avg</th>
+                        <th>vs Yday</th>
+                        <th>vs 7D</th>
+                        <th>vs 30D</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="metric-name">Daily Submissions</td>
+                        <td class="current-val">1,247</td>
+                        <td>1,185</td>
+                        <td>1,221</td>
+                        <td>1,263</td>
+                        <td><span class="delta up">+5.2%</span></td>
+                        <td><span class="delta up">+2.1%</span></td>
+                        <td><span class="delta down">-1.3%</span></td>
+                    </tr>
+                    <tr>
+                        <td class="metric-name">DOCAT Feed</td>
+                        <td class="current-val">856</td>
+                        <td>852</td>
+                        <td>829</td>
+                        <td>841</td>
+                        <td><span class="delta neutral">+0.5%</span></td>
+                        <td><span class="delta up">+3.2%</span></td>
+                        <td><span class="delta up">+1.8%</span></td>
+                    </tr>
+                    <tr>
+                        <td class="metric-name">P360 Accounts</td>
+                        <td class="current-val">2,420</td>
+                        <td>2,490</td>
+                        <td>2,442</td>
+                        <td>2,324</td>
+                        <td><span class="delta down">-2.8%</span></td>
+                        <td><span class="delta neutral">-0.9%</span></td>
+                        <td><span class="delta up">+4.1%</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="margin: 25px 0 10px 0; font-size: 14px; color: #667eea;">2️⃣ Opportunity Funnel Snapshot</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Funnel Stage</th>
+                        <th>Today</th>
+                        <th>Yesterday</th>
+                        <th>7-Day Avg</th>
+                        <th>30-Day Avg</th>
+                        <th>vs Yday</th>
+                        <th>vs 7D</th>
+                        <th>vs 30D</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="metric-name">Total Accounts</td>
+                        <td class="current-val">4,523</td>
+                        <td>4,452</td>
+                        <td>4,450</td>
+                        <td>4,357</td>
+                        <td><span class="delta up">+1.6%</span></td>
+                        <td><span class="delta up">+1.6%</span></td>
+                        <td><span class="delta up">+3.8%</span></td>
+                    </tr>
+                    <tr>
+                        <td class="metric-name">Qualified Prospects</td>
+                        <td class="current-val">3,876</td>
+                        <td>3,796</td>
+                        <td>3,820</td>
+                        <td>3,766</td>
+                        <td><span class="delta up">+2.1%</span></td>
+                        <td><span class="delta up">+1.5%</span></td>
+                        <td><span class="delta up">+2.9%</span></td>
+                    </tr>
+                    <tr>
+                        <td class="metric-name">Target Market</td>
+                        <td class="current-val">2,134</td>
+                        <td>2,211</td>
+                        <td>2,200</td>
+                        <td>2,160</td>
+                        <td><span class="delta down">-3.5%</span></td>
+                        <td><span class="delta down">-3.0%</span></td>
+                        <td><span class="delta neutral">-1.2%</span></td>
+                    </tr>
+                    <tr>
+                        <td class="metric-name">Quotes Sent</td>
+                        <td class="current-val">156</td>
+                        <td>170</td>
+                        <td>180</td>
+                        <td>167</td>
+                        <td><span class="delta down">-8.2%</span></td>
+                        <td><span class="delta down">-13.3%</span></td>
+                        <td><span class="delta down">-6.5%</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- STYLE 3: Visual Cards -->
+        <div class="section">
+            <h2>Style 3: Visual Cards with Mini Comparisons</h2>
+            
+            <h3 style="margin: 0 0 15px 0; font-size: 14px; color: #667eea;">1️⃣ Data Feed Status</h3>
+            <div class="visual-cards">
+                <div class="v-card">
+                    <h4>DAILY SUBMISSIONS</h4>
+                    <div class="big-num">1,247</div>
+                    <div class="mini-compare">
+                        <span class="label">Yesterday</span>
+                        <span class="val">1,185 <span class="delta up">+5.2%</span></span>
+                    </div>
+                    <div class="mini-compare">
+                        <span class="label">7-Day Avg</span>
+                        <span class="val">1,221 <span class="delta up">+2.1%</span></span>
+                    </div>
+                    <div class="mini-compare">
+                        <span class="label">30-Day Avg</span>
+                        <span class="val">1,263 <span class="delta down">-1.3%</span></span>
+                    </div>
+                </div>
+                <div class="v-card">
+                    <h4>DOCAT FEED</h4>
+                    <div class="big-num">856</div>
+                    <div class="mini-compare">
+                        <span class="label">Yesterday</span>
+                        <span class="val">852 <span class="delta neutral">+0.5%</span></span>
+                    </div>
+                    <div class="mini-compare">
+                        <span class="label">7-Day Avg</span>
+                        <span class="val">829 <span class="delta up">+3.2%</span></span>
+                    </div>
+                    <div class="mini-compare">
+                        <span class="label">30-Day Avg</span>
+                        <span class="val">841 <span class="delta up">+1.8%</span></span>
+                    </div>
+                </div>
+                <div class="v-card">
+                    <h4>P360 ACCOUNTS</h4>
+                    <div class="big-num">2,420</div>
+                    <div class="mini-compare">
+                        <span class="label">Yesterday</span>
+                        <span class="val">2,490 <span class="delta down">-2.8%</span></span>
+                    </div>
+                    <div class="mini-compare">
+                        <span class="label">7-Day Avg</span>
+                        <span class="val">2,442 <span class="delta neutral">-0.9%</span></span>
+                    </div>
+                    <div class="mini-compare">
+                        <span class="label">30-Day Avg</span>
+                        <span class="val">2,324 <span class="delta up">+4.1%</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin: 25px 0 15px 0; font-size: 14px; color: #667eea;">2️⃣ Opportunity Funnel Snapshot</h3>
+            <div class="visual-cards">
+                <div class="v-card">
+                    <h4>TOTAL ACCOUNTS</h4>
+                    <div class="big-num">4,523</div>
+                    <div class="mini-compare">
+                        <span class="label">Yesterday</span>
+                        <span class="val">4,452 <span class="delta up">+1.6%</span></span>
+                    </div>
+                    <div class="mini-compare">
+                        <span class="label">7-Day Avg</span>
+                        <span class="val">4,450 <span class="delta up">+1.6%</span></span>
+                    </div>
+                    <div class="mini-compare">
+                        <span class="label">30-Day Avg</span>
+                        <span class="val">4,357 <span class="delta up">+3.8%</span></span>
+                    </div>
+                </div>
+                <div class="v-card">
+                    <h4>QUALIFIED PROSPECTS</h4>
+                    <div class="big-num">3,876</div>
+                    <div class="mini-compare">
+                        <span class="label">Yesterday</span>
+                        <span class="val">3,796 <span class="delta up">+2.1%</span></span>
+                    </div>
+                    <div class="mini-compare">
+                        <span class="label">7-Day Avg</span>
+                        <span class="val">3,820 <span class="delta up">+1.5%</span></span>
+                    </div>
+                    <div class="mini-compare">
+                        <span class="label">30-Day Avg</span>
+                        <span class="val">3,766 <span class="delta up">+2.9%</span></span>
+                    </div>
+                </div>
+                <div class="v-card">
+                    <h4>TARGET MARKET</h4>
+                    <div class="big-num">2,134</div>
+                    <div class="mini-compare">
+                        <span class="label">Yesterday</span>
+                        <span class="val">2,211 <span class="delta down">-3.5%</span></span>
+                    </div>
+                    <div class="mini-compare">
+                        <span class="label">7-Day Avg</span>
+                        <span class="val">2,200 <span class="delta down">-3.0%</span></span>
+                    </div>
+                    <div class="mini-compare">
+                        <span class="label">30-Day Avg</span>
+                        <span class="val">2,160 <span class="delta neutral">-1.2%</span></span>
+                    </div>
+                </div>
+                <div class="v-card">
+                    <h4>QUOTES SENT</h4>
+                    <div class="big-num">156</div>
+                    <div class="mini-compare">
+                        <span class="label">Yesterday</span>
+                        <span class="val">170 <span class="delta down">-8.2%</span></span>
+                    </div>
+                    <div class="mini-compare">
+                        <span class="label">7-Day Avg</span>
+                        <span class="val">180 <span class="delta down">-13.3%</span></span>
+                    </div>
+                    <div class="mini-compare">
+                        <span class="label">30-Day Avg</span>
+                        <span class="val">167 <span class="delta down">-6.5%</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STYLE 4: Sparkline Style -->
+        <div class="section" style="background: #fafbfc;">
+            <h2>Style 4: Horizontal Sparkline View</h2>
+            
+            <h3 style="margin: 0 0 15px 0; font-size: 14px; color: #667eea;">1️⃣ Data Feed Status</h3>
+            <div>
+                <div class="sparkline-row">
+                    <div class="spark-label">Daily Submissions</div>
+                    <div class="spark-current">1,247</div>
+                    <div class="spark-compares">
+                        <div class="spark-item">
+                            <span class="label">YESTERDAY</span>
+                            <span class="value">1,185 <span class="delta up">+5.2%</span></span>
+                        </div>
+                        <div class="spark-item">
+                            <span class="label">7-DAY AVG</span>
+                            <span class="value">1,221 <span class="delta up">+2.1%</span></span>
+                        </div>
+                        <div class="spark-item">
+                            <span class="label">30-DAY AVG</span>
+                            <span class="value">1,263 <span class="delta down">-1.3%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="sparkline-row">
+                    <div class="spark-label">DOCAT Feed</div>
+                    <div class="spark-current">856</div>
+                    <div class="spark-compares">
+                        <div class="spark-item">
+                            <span class="label">YESTERDAY</span>
+                            <span class="value">852 <span class="delta neutral">+0.5%</span></span>
+                        </div>
+                        <div class="spark-item">
+                            <span class="label">7-DAY AVG</span>
+                            <span class="value">829 <span class="delta up">+3.2%</span></span>
+                        </div>
+                        <div class="spark-item">
+                            <span class="label">30-DAY AVG</span>
+                            <span class="value">841 <span class="delta up">+1.8%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="sparkline-row">
+                    <div class="spark-label">P360 Accounts</div>
+                    <div class="spark-current">2,420</div>
+                    <div class="spark-compares">
+                        <div class="spark-item">
+                            <span class="label">YESTERDAY</span>
+                            <span class="value">2,490 <span class="delta down">-2.8%</span></span>
+                        </div>
+                        <div class="spark-item">
+                            <span class="label">7-DAY AVG</span>
+                            <span class="value">2,442 <span class="delta neutral">-0.9%</span></span>
+                        </div>
+                        <div class="spark-item">
+                            <span class="label">30-DAY AVG</span>
+                            <span class="value">2,324 <span class="delta up">+4.1%</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin: 25px 0 15px 0; font-size: 14px; color: #667eea;">2️⃣ Opportunity Funnel Snapshot</h3>
+            <div>
+                <div class="sparkline-row">
+                    <div class="spark-label">Total Accounts</div>
+                    <div class="spark-current">4,523</div>
+                    <div class="spark-compares">
+                        <div class="spark-item">
+                            <span class="label">YESTERDAY</span>
+                            <span class="value">4,452 <span class="delta up">+1.6%</span></span>
+                        </div>
+                        <div class="spark-item">
+                            <span class="label">7-DAY AVG</span>
+                            <span class="value">4,450 <span class="delta up">+1.6%</span></span>
+                        </div>
+                        <div class="spark-item">
+                            <span class="label">30-DAY AVG</span>
+                            <span class="value">4,357 <span class="delta up">+3.8%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="sparkline-row">
+                    <div class="spark-label">Qualified Prospects</div>
+                    <div class="spark-current">3,876</div>
+                    <div class="spark-compares">
+                        <div class="spark-item">
+                            <span class="label">YESTERDAY</span>
+                            <span class="value">3,796 <span class="delta up">+2.1%</span></span>
+                        </div>
+                        <div class="spark-item">
+                            <span class="label">7-DAY AVG</span>
+                            <span class="value">3,820 <span class="delta up">+1.5%</span></span>
+                        </div>
+                        <div class="spark-item">
+                            <span class="label">30-DAY AVG</span>
+                            <span class="value">3,766 <span class="delta up">+2.9%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="sparkline-row">
+                    <div class="spark-label">Target Market</div>
+                    <div class="spark-current">2,134</div>
+                    <div class="spark-compares">
+                        <div class="spark-item">
+                            <span class="label">YESTERDAY</span>
+                            <span class="value">2,211 <span class="delta down">-3.5%</span></span>
+                        </div>
+                        <div class="spark-item">
+                            <span class="label">7-DAY AVG</span>
+                            <span class="value">2,200 <span class="delta down">-3.0%</span></span>
+                        </div>
+                        <div class="spark-item">
+                            <span class="label">30-DAY AVG</span>
+                            <span class="value">2,160 <span class="delta neutral">-1.2%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="sparkline-row">
+                    <div class="spark-label">Quotes Sent</div>
+                    <div class="spark-current">156</div>
+                    <div class="spark-compares">
+                        <div class="spark-item">
+                            <span class="label">YESTERDAY</span>
+                            <span class="value">170 <span class="delta down">-8.2%</span></span>
+                        </div>
+                        <div class="spark-item">
