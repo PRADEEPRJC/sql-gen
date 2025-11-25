@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Crime Insurance - 10 Creative Visuals</title>
+<style>
+    /* --- Base --- */
+    body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; background: #f5f7fa; margin: 0; padding: 20px; color: #333; }
+    .container { max-width: 900px; margin: 0 auto; }
+    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 22px; border-radius: 8px; margin-bottom: 18px; }
+    .header h1 { margin: 0; font-size: 20px; }
+    .header p { margin: 6px 0 0 0; font-size: 12px; opacity: 0.95; }
+    .section { background: white; padding: 18px; border-radius: 8px; margin-bottom: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .section h2 { margin: 0 0 14px 0; font-size: 15px; color: #1f2937; border-left: 4px solid #667eea; padding-left: 10px; }
+    .mini { font-size: 12px; color: #6b7280; margin-bottom: 12px; }
+
+    /* --- Style 1: Traffic Light --- */
+    .traffic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .traffic-item { background: #fafbff; padding: 12px; border-radius: 8px; text-align: center; border: 1px solid #eef2ff; }
+    .traffic-item h4 { margin: 6px 0; font-size: 12px; color: #374151; text-transform: uppercase; }
+    .status-circle { width: 50px; height: 50px; border-radius: 50%; margin: 8px auto; display: flex; align-items: center; justify-content: center; font-size: 18px; color: white; font-weight: 700; }
+    .status-circle.green { background: #10b981; }
+    .status-circle.yellow { background: #f59e0b; }
+    .status-circle.red { background: #ef4444; }
+    .status-text { font-size: 12px; color: #4b5563; line-height: 1.4; }
+
+    /* --- Funnel --- */
+    .funnel-container { max-width: 640px; margin: 8px auto 0 auto; }
+    .funnel-stage { background: linear-gradient(135deg,#667eea,#764ba2); margin: 8px auto; padding: 14px; border-radius: 8px; color: white; position: relative; }
+    .funnel-stage:nth-child(1) { width: 100%; }
+    .funnel-stage:nth-child(2) { width: 84%; }
+    .funnel-stage:nth-child(3) { width: 62%; }
+    .funnel-stage:nth-child(4) { width: 42%; }
+    .funnel-header { display:flex; justify-content:space-between; align-items:center; }
+    .funnel-label { font-size: 12px; font-weight:600; }
+    .funnel-value { font-size: 20px; font-weight:700; }
+    .funnel-compare { font-size: 11px; opacity:0.95; margin-top:6px; }
+
+    /* --- Heartbeat / Pathway --- */
+    .heartbeat-row { display:flex; align-items:center; padding:12px 0; border-bottom:1px solid #eef2ff; }
+    .hb-label { width: 140px; font-weight:600; color:#1f2937; font-size:13px; }
+    .hb-pulse { width:76px; height:36px; background:#eef2ff; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; color:#0369a1; border:1px solid #c7e9ff; }
+    .hb-stats { font-size:12px; color:#475569; margin-left:14px; display:flex; gap:18px; }
+
+    .pathway { display:flex; align-items:center; gap:10px; justify-content:space-between; }
+    .pathway-node { text-align:center; flex:1; }
+    .pathway-circle { width:76px; height:76px; border-radius:50%; background:linear-gradient(135deg,#667eea,#764ba2); color:white; display:flex; align-items:center; justify-content:center; flex-direction:column; margin:0 auto 8px; font-weight:700; }
+    .pathway-meta { font-size:12px; color:#475569; }
+
+    /* --- Dashboard Cards / Flow --- */
+    .dashboard-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:12px; }
+    .dash-card { background:linear-gradient(180deg,#ffffff,#fbfdff); border:1px solid #eef2ff; border-radius:8px; padding:12px; }
+    .dash-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+    .dash-title { font-size:12px; color:#6b7280; font-weight:700; text-transform:uppercase; }
+    .dash-value { font-size:22px; font-weight:800; color:#0f172a; margin-bottom:8px; }
+    .dash-mini { display:flex; gap:8px; font-size:12px; color:#475569; }
+    .dash-mini-item { flex:1; background:#f8fafc; padding:8px; border-radius:6px; text-align:center; }
+
+    .flow-chart { display:flex; gap:10px; margin-top:12px; }
+    .flow-box { flex:1; background:white; border:1px solid #dbeafe; border-radius:8px; padding:12px; text-align:center; }
+    .flow-number { font-size:26px; font-weight:800; color:#374151; margin-bottom:6px; }
+    .flow-label { font-size:12px; color:#6b7280; margin-bottom:8px; }
+    .flow-trend { display:inline-block; font-size:12px; padding:6px; border-radius:6px; }
+    .flow-trend.up { background:#d1fae5; color:#065f46; }
+    .flow-trend.down { background:#fee2e2; color:#991b1b; }
+
+    /* --- Metric Tiles --- */
+    .tile-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; }
+    .metric-tile { background:white; border-left:5px solid #667eea; padding:12px; border-radius:8px; box-shadow:0 1px 4px rgba(2,6,23,0.03); }
+    .tile-name { font-size:12px; color:#6b7280; text-transform:uppercase; margin-bottom:6px; font-weight:700; }
+    .tile-main { font-size:24px; font-weight:800; color:#0f172a; margin-bottom:8px; }
+    .tile-comparisons { display:flex; gap:8px; }
+    .tile-comp { background:#f8fafc; padding:8px; border-radius:6px; text-align:center; font-size:12px; flex:1; }
+
+    /* --- Progress --- */
+    .progress-item { background:#fbfdff; padding:12px; border-radius:8px; margin-bottom:12px; border:1px solid #eef2ff; }
+    .progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+    .progress-current { font-size:20px; font-weight:800; color:#0f172a; }
+    .progress-bar-container { height:8px; background:#eef2ff; border-radius:4px; overflow:hidden; }
+    .progress-fill { height:100%; background:linear-gradient(90deg,#10b981,#059669); width:50%; }
+
+    /* --- Gauge --- */
+    .gauge-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; }
+    .gauge-card { background:white; padding:12px; border-radius:8px; border:1px solid #eef2ff; text-align:center; }
+    .gauge-display { width:110px; height:110px; margin:0 auto 8px; border-radius:50%; border:10px solid #eef2ff; border-top-color:#10b981; display:flex; align-items:center; justify-content:center; transform:rotate(40deg); }
+    .gauge-value { transform:rotate(-40deg); font-size:20px; font-weight:800; color:#0f172a; }
+
+    /* --- Timeline --- */
+    .timeline { position:relative; padding-left:22px; }
+    .timeline-item { position:relative; padding:12px 0; border-left:3px solid #eef2ff; margin-bottom:14px; padding-left:18px; background:#fbfdff; border-radius:6px; }
+    .timeline-dot { position:absolute; left:-8px; top:18px; width:14px; height:14px; border-radius:50%; background:#667eea; border:3px solid white; box-shadow:0 0 0 3px rgba(102,126,234,0.12); }
+    .timeline-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+    .timeline-name { font-weight:700; color:#0f172a; }
+    .timeline-value { font-size:20px; color:#334155; font-weight:800; }
+    .timeline-stats { display:flex; gap:8px; font-size:12px; color:#475569; }
+
+    /* delta badges */
+    .delta { display:inline-block; font-weight:700; padding:4px 8px; border-radius:6px; font-size:12px; }
+    .delta.up { background:#d1fae5; color:#065f46; }
+    .delta.down { background:#fee2e2; color:#991b1b; }
+    .delta.neutral { background:#eef2ff; color:#1f2937; }
+    
+    /* responsive tweaks */
+    @media (max-width:560px){ .flow-chart, .dashboard-grid, .tile-grid, .gauge-grid { grid-template-columns: 1fr; display:block; } .pathway { flex-direction:column; } .funnel-container { max-width:100%; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>💼 Crime Insurance — 10 Creative Visuals</h1>
+        <p>November 25, 2025 — Single-product daily snapshot (Data Feed Status & Opportunity Funnel)</p>
+    </div>
+
+    <!-- STYLE 1 -->
+    <div class="section">
+        <h2>Style 1 — Traffic Light Status & Compact Funnel</h2>
+        <div class="mini">Easy at-a-glance traffic-light blocks that include today's value and 3 comparative deltas.</div>
+
+        <div class="traffic-grid" aria-hidden="false">
+            <div class="traffic-item">
+                <h4>Daily Submissions</h4>
+                <div class="status-circle green">✓</div>
+                <div style="font-size:18px; font-weight:700; margin-bottom:6px;">1,247</div>
+                <div class="status-text">Yesterday: 1,185   +5.2 percent<br>7-day avg: 1,221   +2.1 percent<br>30-day avg: 1,263   -1.3 percent</div>
+            </div>
+            <div class="traffic-item">
+                <h4>DOCAT Feed</h4>
+                <div class="status-circle green">✓</div>
+                <div style="font-size:18px; font-weight:700; margin-bottom:6px;">856</div>
+                <div class="status-text">Yesterday: 852   +0.5 percent<br>7-day avg: 829   +3.2 percent<br>30-day avg: 841   +1.8 percent</div>
+            </div>
+            <div class="traffic-item">
+                <h4>P360 Accounts</h4>
+                <div class="status-circle yellow">!</div>
+                <div style="font-size:18px; font-weight:700; margin-bottom:6px;">2,420</div>
+                <div class="status-text">Yesterday: 2,490   -2.8 percent<br>7-day avg: 2,442   -0.9 percent<br>30-day avg: 2,324   +4.1 percent</div>
+            </div>
+        </div>
+
+        <div style="margin-top:14px;" class="funnel-container">
+            <div class="funnel-stage">
+                <div class="funnel-header">
+                    <span class="funnel-label">Total Accounts</span>
+                    <span class="funnel-value">4,523</span>
+                </div>
+                <div class="funnel-compare">Yesterday: 4,452   +1.6 percent &nbsp; | &nbsp; 7-day avg: 4,450   +1.6 percent &nbsp; | &nbsp; 30-day avg: 4,357   +3.8 percent</div>
+            </div>
+            <div class="funnel-stage">
+                <div class="funnel-header">
+                    <span class="funnel-label">Qualified Prospects</span>
+                    <span class="funnel-value">3,876</span>
+                </div>
+                <div class="funnel-compare">Yesterday: 3,796   +2.1 percent &nbsp; | &nbsp; 7-day avg: 3,820   +1.5 percent</div>
+            </div>
+            <div class="funnel-stage">
+                <div class="funnel-header">
+                    <span class="funnel-label">Target Market</span>
+                    <span class="funnel-value">2,134</span>
+                </div>
+                <div class="funnel-compare">Yesterday: 2,211   -3.5 percent &nbsp; | &nbsp; 7-day avg: 2,200   -3.0 percent</div>
+            </div>
+            <div class="funnel-stage">
+                <div class="funnel-header">
+                    <span class="funnel-label">Quotes Sent</span>
+                    <span class="funnel-value">156</span>
+                </div>
+                <div class="funnel-compare">Yesterday: 170   -8.2 percent &nbsp; | &nbsp; 7-day avg: 180   -13.3 percent</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STYLE 2 -->
+    <div class="section">
+        <h2>Style 2 — Heartbeat Monitor & Conversion Pathway</h2>
+        <div class="mini">A "health" view showing feed pulse and a conversion pathway from total to quotes.</div>
+
+        <div>
+            <div class="heartbeat-row">
+                <div class="hb-label">Daily Submissions</div>
+                <div class="hb-pulse">1,247</div>
+                <div class="hb-stats">
+                    <div>Yesterday 5.2 percent</div>
+                    <div>7-day 2.1 percent</div>
+                    <div>30-day -1.3 percent</div>
+                </div>
+            </div>
+            <div class="heartbeat-row">
+                <div class="hb-label">DOCAT Feed</div>
+                <div class="hb-pulse">856</div>
+                <div class="hb-stats">
+                    <div>Yesterday 0.5 percent</div>
+                    <div>7-day 3.2 percent</div>
+                    <div>30-day 1.8 percent</div>
+                </div>
+            </div>
+            <div class="heartbeat-row">
+                <div class="hb-label">P360 Accounts</div>
+                <div class="hb-pulse">2,420</div>
+                <div class="hb-stats">
+                    <div>Yesterday -2.8 percent</div>
+                    <div>7-day -0.9 percent</div>
+                    <div>30-day 4.1 percent</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top:14px;">
+            <div class="pathway" role="group" aria-label="Conversion pathway">
+                <div class="pathway-node">
+                    <div class="pathway-circle"><div style="font-size:18px;">4,523</div><div style="font-size:10px; opacity:0.9;">TOTAL</div></div>
+                    <div class="pathway-meta">Yesterday 1.6 percent higher</div>
+                </div>
+                <div class="pathway-arrow">→</div>
+                <div class="pathway-node">
+                    <div class="pathway-circle"><div style="font-size:18px;">3,876</div><div style="font-size:10px; opacity:0.9;">QUALIFIED</div></div>
+                    <div class="pathway-meta">Yesterday 2.1 percent higher</div>
+                </div>
+                <div class="pathway-arrow">→</div>
+                <div class="pathway-node">
+                    <div class="pathway-circle"><div style="font-size:18px;">2,134</div><div style="font-size:10px; opacity:0.9;">TARGET</div></div>
+                    <div class="pathway-meta">Yesterday 3.5 percent lower</div>
+                </div>
+                <div class="pathway-arrow">→</div>
+                <div class="pathway-node">
+                    <div class="pathway-circle"><div style="font-size:18px;">156</div><div style="font-size:10px; opacity:0.9;">QUOTED</div></div>
+                    <div class="pathway-meta">Yesterday 8.2 percent lower</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STYLE 3 -->
+    <div class="section">
+        <h2>Style 3 — Dashboard Cards & Pipeline Flow</h2>
+        <div class="mini">Grid cards for each feed and a horizontal pipeline flow. Good for email summaries and dashboards.</div>
+
+        <div class="dashboard-grid">
+            <div class="dash-card">
+                <div class="dash-header"><div class="dash-title">Daily Submissions</div><div style="font-size:14px;">📥</div></div>
+                <div class="dash-value">1,247</div>
+                <div class="dash-mini">
+                    <div class="dash-mini-item"><div style="font-size:11px;">Yesterday</div><strong>+5.2 percent</strong></div>
+                    <div class="dash-mini-item"><div style="font-size:11px;">7-Day</div><strong>+2.1 percent</strong></div>
+                    <div class="dash-mini-item"><div style="font-size:11px;">30-Day</div><strong>-1.3 percent</strong></div>
+                </div>
+            </div>
+            <div class="dash-card">
+                <div class="dash-header"><div class="dash-title">DOCAT Feed</div><div style="font-size:14px;">🗂️</div></div>
+                <div class="dash-value">856</div>
+                <div class="dash-mini">
+                    <div class="dash-mini-item"><div style="font-size:11px;">Yesterday</div><strong>+0.5 percent</strong></div>
+                    <div class="dash-mini-item"><div style="font-size:11px;">7-Day</div><strong>+3.2 percent</strong></div>
+                    <div class="dash-mini-item"><div style="font-size:11px;">30-Day</div><strong>+1.8 percent</strong></div>
+                </div>
+            </div>
+            <div class="dash-card">
+                <div class="dash-header"><div class="dash-title">P360 Accounts</div><div style="font-size:14px;">💾</div></div>
+                <div class="dash-value">2,420</div>
+                <div class="dash-mini">
+                    <div class="dash-mini-item"><div style="font-size:11px;">Yesterday</div><strong>-2.8 percent</strong></div>
+                    <div class="dash-mini-item"><div style="font-size:11px;">7-Day</div><strong>-0.9 percent</strong></div>
+                    <div class="dash-mini-item"><div style="font-size:11px;">30-Day</div><strong>+4.1 percent</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-chart" style="margin-top:14px;">
+            <div class="flow-box">
+                <div class="flow-number">4,523</div>
+                <div class="flow-label">Total Accounts</div>
+                <div class="flow-trend up">Yesterday 1.6 percent</div>
+            </div>
+            <div class="flow-box">
+                <div class="flow-number">3,876</div>
+                <div class="flow-label">Qualified</div>
+                <div class="flow-trend up">Yesterday 2.1 percent</div>
+            </div>
+            <div class="flow-box">
+                <div class="flow-number">2,134</div>
+                <div class="flow-label">Target</div>
+                <div class="flow-trend down">Yesterday -3.5 percent</div>
+            </div>
+            <div class="flow-box">
+                <div class="flow-number">156</div>
+                <div class="flow-label">Quotes</div>
+                <div class="flow-trend down">Yesterday -8.2 percent</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STYLE 4 -->
+    <div class="section">
+        <h2>Style 4 — Icon Tiles & Progress Bars</h2>
+        <div class="mini">Compact tiles with comparisons and a progress-oriented view for funnel conversion.</div>
+
+        <div class="tile-grid">
+            <div class="metric-tile">
+                <div class="tile-name">Daily Submissions</div>
+                <div class="tile-main">1,247</div>
+                <div class="tile-comparisons">
+                    <div class="tile-comp"><div style="font-size:11px;">Yesterday</div><strong style="color:#065f46;">+5.2 percent</strong></div>
+                    <div class="tile-comp"><div style="font-size:11px;">7-Day</div><strong style="color:#065f46;">+2.1 percent</strong></div>
+                    <div class="tile-comp"><div style="font-size:11px;">30-Day</div><strong style="color:#991b1b;">-1.3 percent</strong></div>
+                </div>
+            </div>
+
+            <div class="metric-tile">
+                <div class="tile-name">DOCAT Feed</div>
+                <div class="tile-main">856</div>
+                <div class="tile-comparisons">
+                    <div class="tile-comp"><div style="font-size:11px;">Yesterday</div><strong style="color:#065f46;">+0.5 percent</strong></div>
+                    <div class="tile-comp"><div style="font-size:11px;">7-Day</div><strong style="color:#065f46;">+3.2 percent</strong></div>
+                    <div class="tile-comp"><div style="font-size:11px;">30-Day</div><strong style="color:#065f46;">+1.8 percent</strong></div>
+                </div>
+            </div>
+
+            <div class="metric-tile">
+                <div class="tile-name">P360 Accounts</div>
+                <div class="tile-main">2,420</div>
+                <div class="tile-comparisons">
+                    <div class="tile-comp"><div style="font-size:11px;">Yesterday</div><strong style="color:#991b1b;">-2.8 percent</strong></div>
+                    <div class="tile-comp"><div style="font-size:11px;">7-Day</div><strong style="color:#374151;">-0.9 percent</strong></div>
+                    <div class="tile-comp"><div style="font-size:11px;">30-Day</div><strong style="color:#065f46;">+4.1 percent</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top:14px;">
+            <div class="progress-item">
+                <div class="progress-top">
+                    <div class="progress-name">Conversion: Total → Target</div>
+                    <div class="progress-current">47 percent</div>
+                </div>
+                <div class="progress-bar-container" aria-hidden="true"><div class="progress-fill" style="width:47%;"></div></div>
+                <div style="margin-top:8px; font-size:12px; color:#475569;">Target conversion is 47 percent today. Yesterday 48 percent; 7-day 46 percent.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STYLE 5 -->
+    <div class="section">
+        <h2>Style 5 — Compact Status Cards</h2>
+        <div class="mini">Three concise cards that blend value and delta badges for quick scanning.</div>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <div style="flex:1; min-width:220px; background:white; border-radius:8px; padding:12px; border:1px solid #eef2ff;">
+                <div style="font-size:12px; color:#6b7280; font-weight:700;">Daily Submissions</div>
+                <div style="font-size:20px; font-weight:800; color:#0f172a; margin:8px 0;">1,247</div>
+                <div><span class="delta up">+5.2 percent</span> Yesterday &nbsp; <span class="delta neutral">+2.1 percent</span> 7-day</div>
+            </div>
+
+            <div style="flex:1; min-width:220px; background:white; border-radius:8px; padding:12px; border:1px solid #eef2ff;">
+                <div style="font-size:12px; color:#6b7280; font-weight:700;">DOCAT Feed</div>
+                <div style="font-size:20px; font-weight:800; color:#0f172a; margin:8px 0;">856</div>
+                <div><span class="delta neutral">+0.5 percent</span> Yesterday &nbsp; <span class="delta up">+3.2 percent</span> 7-day</div>
+            </div>
+
+            <div style="flex:1; min-width:220px; background:white; border-radius:8px; padding:12px; border:1px solid #eef2ff;">
+                <div style="font-size:12px; color:#6b7280; font-weight:700;">P360 Accounts</div>
+                <div style="font-size:20px; font-weight:800; color:#0f172a; margin:8px 0;">2,420</div>
+                <div><span class="delta down">-2.8 percent</span> Yesterday &nbsp; <span class="delta neutral">-0.9 percent</span> 7-day</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STYLE 6 -->
+    <div class="section">
+        <h2>Style 6 — Pipeline Flow Chart (Vertical Boxes)</h2>
+        <div class="mini">Flow boxes with large values and per-box trend badges.</div>
+
+        <div class="flow-chart">
+            <div class="flow-box">
+                <div class="flow-number">4,523</div>
+                <div class="flow-label">Total Accounts</div>
+                <div class="flow-trend up" style="margin-top:10px;">Yesterday 1.6 percent</div>
+            </div>
+            <div class="flow-box">
+                <div class="flow-number">3,876</div>
+                <div class="flow-label">Qualified</div>
+                <div class="flow-trend up" style="margin-top:10px;">Yesterday 2.1 percent</div>
+            </div>
+            <div class="flow-box">
+                <div class="flow-number">2,134</div>
+                <div class="flow-label">Target</div>
+                <div class="flow-trend down" style="margin-top:10px;">Yesterday -3.5 percent</div>
+            </div>
+            <div class="flow-box">
+                <div class="flow-number">156</div>
+                <div class="flow-label">Quotes</div>
+                <div class="flow-trend down" style="margin-top:10px;">Yesterday -8.2 percent</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STYLE 7 -->
+    <div class="section">
+        <h2>Style 7 — Metric Tiles with Inline Comparisons</h2>
+        <div class="mini">High-density tiles that present value and three comparative deltas inline.</div>
+
+        <div class="tile-grid">
+            <div class="metric-tile">
+                <div class="tile-name">Total Accounts</div>
+                <div class="tile-main">4,523</div>
+                <div class="tile-comparisons">
+                    <div class="tile-comp">Yesterday <br><strong>+1.6 percent</strong></div>
+                    <div class="tile-comp">7-Day <br><strong>+1.6 percent</strong></div>
+                    <div class="tile-comp">30-Day <br><strong>+3.8 percent</strong></div>
+                </div>
+            </div>
+
+            <div class="metric-tile">
+                <div class="tile-name">Target Market</div>
+                <div class="tile-main">2,134</div>
+                <div class="tile-comparisons">
+                    <div class="tile-comp">Yesterday <br><strong>-3.5 percent</strong></div>
+                    <div class="tile-comp">7-Day <br><strong>-3.0 percent</strong></div>
+                    <div class="tile-comp">30-Day <br><strong>-1.2 percent</strong></div>
+                </div>
+            </div>
+
+            <div class="metric-tile">
+                <div class="tile-name">Quotes Sent</div>
+                <div class="tile-main">156</div>
+                <div class="tile-comparisons">
+                    <div class="tile-comp">Yesterday <br><strong>-8.2 percent</strong></div>
+                    <div class="tile-comp">7-Day <br><strong>-13.3 percent</strong></div>
+                    <div class="tile-comp">30-Day <br><strong>-6.5 percent</strong></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STYLE 8 -->
+    <div class="section">
+        <h2>Style 8 — Progress Indicators</h2>
+        <div class="mini">Progress bars to show conversion steps and their performance vs benchmarks.</div>
+
+        <div class="progress-item">
+            <div class="progress-top">
+                <div class="progress-name">Qualified / Total</div>
+                <div class="progress-current">86 percent</div>
+            </div>
+            <div class="progress-bar-container" aria-hidden="true">
+                <div class="progress-fill" style="width:86%;"></div>
+            </div>
+            <div style="margin-top:8px; font-size:12px; color:#475569;">Yesterday 85 percent — 7-day 84 percent — 30-day 83 percent</div>
+        </div>
+
+        <div class="progress-item">
+            <div class="progress-top">
+                <div class="progress-name">Target / Qualified</div>
+                <div class="progress-current">55 percent</div>
+            </div>
+            <div class="progress-bar-container" aria-hidden="true">
+                <div class="progress-fill" style="width:55%;"></div>
+            </div>
+            <div style="margin-top:8px; font-size:12px; color:#475569;">Yesterday 57 percent — 7-day 56 percent — 30-day 58 percent</div>
+        </div>
+    </div>
+
+    <!-- STYLE 9 -->
+    <div class="section">
+        <h2>Style 9 — Gauge Cards</h2>
+        <div class="mini">Circular gauges that visualize one key KPI and show comparative numbers beneath.</div>
+
+        <div class="gauge-grid">
+            <div class="gauge-card">
+                <div class="gauge-title">Daily Submission Health</div>
+                <div class="gauge-display"><div class="gauge-value">92</div></div>
+                <div class="gauge-comparisons">
+                    <div class="gauge-comp"><span class="gauge-comp-val">+5.2</span><span class="gauge-comp-label">Yesterday</span></div>
+                    <div class="gauge-comp"><span class="gauge-comp-val">+2.1</span><span class="gauge-comp-label">7-Day</span></div>
+                    <div class="gauge-comp"><span class="gauge-comp-val">-1.3</span><span class="gauge-comp-label">30-Day</span></div>
+                </div>
+            </div>
+
+            <div class="gauge-card">
+                <div class="gauge-title">P360 Refresh Index</div>
+                <div class="gauge-display"><div class="gauge-value">78</div></div>
+                <div class="gauge-comparisons">
+                    <div class="gauge-comp"><span class="gauge-comp-val">-2.8</span><span class="gauge-comp-label">Yesterday</span></div>
+                    <div class="gauge-comp"><span class="gauge-comp-val">-0.9</span><span class="gauge-comp-label">7-Day</span></div>
+                    <div class="gauge-comp"><span class="gauge-comp-val">+4.1</span><span class="gauge-comp-label">30-Day</span></div>
+                </div>
+            </div>
+
+            <div class="gauge-card">
+                <div class="gauge-title">Quote Success Index</div>
+                <div class="gauge-display"><div class="gauge-value">64</div></div>
+                <div class="gauge-comparisons">
+                    <div class="gauge-comp"><span class="gauge-comp-val">-8.2</span><span class="gauge-comp-label">Yesterday</span></div>
+                    <div class="gauge-comp"><span class="gauge-comp-val">-13.3</span><span class="gauge-comp-label">7-Day</span></div>
+                    <div class="gauge-comp"><span class="gauge-comp-val">-6.5</span><span class="gauge-comp-label">30-Day</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STYLE 10 -->
+    <div class="section">
+        <h2>Style 10 — Timeline View</h2>
+        <div class="mini">Chronological card-style timeline that surfaces values and comparative deltas for key stages.</div>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot" aria-hidden="true"></div>
+                <div class="timeline-header">
+                    <div class="timeline-name">Total Accounts</div>
+                    <div class="timeline-value">4,523</div>
+                </div>
+                <div class="timeline-stats">
+                    <div style="min-width:80px;"><div class="timeline-stat-label">Yesterday</div><div class="timeline-stat-val">+1.6 percent</div></div>
+                    <div style="min-width:80px;"><div class="timeline-stat-label">7-Day</div><div class="timeline-stat-val">+1.6 percent</div></div>
+                    <div style="min-width:80px;"><div class="timeline-stat-label">30-Day</div><div class="timeline-stat-val">+3.8 percent</div></div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot" aria-hidden="true"></div>
+                <div class="timeline-header">
+                    <div class="timeline-name">Qualified Prospects</div>
+                    <div class="timeline-value">3,876</div>
+                </div>
+                <div class="timeline-stats">
+                    <div style="min-width:80px;"><div class="timeline-stat-label">Yesterday</div><div class="timeline-stat-val">+2.1 percent</div></div>
+                    <div style="min-width:80px;"><div class="timeline-stat-label">7-Day</div><div class="timeline-stat-val">+1.5 percent</div></div>
+                    <div style="min-width:80px;"><div class="timeline-stat-label">30-Day</div><div class="timeline-stat-val">+2.9 percent</div></div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot" aria-hidden="true"></div>
+                <div class="timeline-header">
+                    <div class="timeline-name">Target Market</div>
+                    <div class="timeline-value">2,134</div>
+                </div>
+                <div class="timeline-stats">
+                    <div style="min-width:80px;"><div class="timeline-stat-label">Yesterday</div><div class="timeline-stat-val">-3.5 percent</div></div>
+                    <div style="min-width:80px;"><div class="timeline-stat-label">7-Day</div><div class="timeline-stat-val">-3.0 percent</div></div>
+                    <div style="min-width:80px;"><div class="timeline-stat-label">30-Day</div><div class="timeline-stat-val">-1.2 percent</div></div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot" aria-hidden="true"></div>
+                <div class="timeline-header">
+                    <div class="timeline-name">Quotes Sent</div>
+                    <div class="timeline-value">156</div>
+                </div>
+                <div class="timeline-stats">
+                    <div style="min-width:80px;"><div class="timeline-stat-label">Yesterday</div><div class="timeline-stat-val">-8.2 percent</div></div>
+                    <div style="min-width:80px;"><div class="timeline-stat-label">7-Day</div><div class="timeline-stat-val">-13.3 percent</div></div>
+                    <div style="min-width:80px;"><div class="timeline-stat-label">30-Day</div><div class="timeline-stat-val">-6.5 percent</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="font-size:12px; color:#6b7280; text-align:center; margin:18px 0 40px;">
+        Tip: choose one or two styles for daily distribution — KPI cards for leadership and flow/timeline views for operations.
+    </div>
+
+</div>
+</body>
+</html>

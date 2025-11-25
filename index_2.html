@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Crime Insurance - 10 Visual Styles</title>
+<style>
+  /* Reset for email */
+  body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+  table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+  img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+  body { margin: 0 !important; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f7fa; color: #333; }
+  .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; padding: 20px; }
+  h1, h2, h3 { margin: 0 0 10px 0; }
+  h1 { font-size: 22px; color: #ffffff; }
+  h2 { font-size: 16px; color: #1f2937; border-left: 4px solid #667eea; padding-left: 8px; }
+  h3 { color: #667eea; font-size: 14px; margin: 12px 0 8px 0; }
+  .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 8px; text-align: center; }
+  .section { padding: 20px 0; }
+
+  /* Style 1: Traffic Light Status */
+  .traffic-grid { width: 100%; border-collapse: collapse; }
+  .traffic-item { background: #f9fafb; border-radius: 8px; text-align: center; padding: 15px; margin-bottom: 10px; }
+  .status-circle {
+    width: 50px; height: 50px; border-radius: 50%; margin: 0 auto 10px auto; font-weight: bold; font-size: 20px; color: white;
+    display: inline-block; line-height: 50px;
+  }
+  .green { background: linear-gradient(135deg, #10b981, #059669); }
+  .yellow { background: linear-gradient(135deg, #f59e0b, #d97706); }
+  .red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+  .status-text { font-size: 11px; color: #6b7280; line-height: 1.5; }
+
+  /* Style 2: Funnel Visual */
+  .funnel-stage {
+    background: linear-gradient(135deg, #667eea, #764ba2); color: white;
+    padding: 15px; border-radius: 8px; margin: 8px 0; text-align: center;
+  }
+  .funnel-label { font-weight: 600; font-size: 14px; }
+  .funnel-value { font-size: 20px; font-weight: bold; margin: 5px 0; }
+  .funnel-compare { font-size: 10px; opacity: 0.8; }
+
+  /* Style 3: Heartbeat Monitor */
+  .heartbeat-row { border-bottom: 1px solid #e5e7eb; padding: 12px 0; display: flex; align-items: center; }
+  .hb-label { width: 120px; font-weight: 600; color: #1f2937; font-size: 14px; }
+  .hb-pulse {
+    width: 60px; height: 30px; border: 2px solid #0284c7; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center; color: #0284c7; font-weight: bold; font-size: 16px;
+    background: #f0f9ff;
+  }
+  .hb-stats { font-size: 11px; color: #6b7280; margin-left: 10px; line-height: 1.2; }
+  .hb-wave {
+    flex-grow: 1; height: 20px;
+    background: repeating-linear-gradient(90deg, #10b981 0px, #10b981 1.5px, transparent 1.5px, transparent 5px);
+    border-radius: 4px; margin-left: 15px;
+  }
+  .hb-wave.warning {
+    background: repeating-linear-gradient(90deg, #f59e0b 0px, #f59e0b 1.5px, transparent 1.5px, transparent 5px);
+  }
+
+  /* Style 4: Conversion Pathway */
+  .pathway { display: flex; align-items: center; justify-content: space-between; margin: 20px 0; }
+  .pathway-node { text-align: center; flex: 1; }
+  .pathway-circle {
+    width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white; font-weight: bold; display: flex; flex-direction: column; justify-content: center; margin: 0 auto 8px;
+    font-size: 18px;
+  }
+  .pathway-circle .label { font-size: 10px; opacity: 0.9; margin-top: 2px; }
+  .pathway-arrow { flex: 0 0 30px; color: #667eea; font-size: 22px; }
+  .pathway-meta { font-size: 11px; color: #6b7280; line-height: 1.2; }
+
+  /* Style 5: Dashboard Cards */
+  .dashboard-grid { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  .dash-card { background: linear-gradient(135deg, #f9fafb, white); border: 2px solid #e5e7eb; border-radius: 8px; padding: 15px; margin-bottom: 10px; }
+  .dash-header { display: flex; align-items: center; margin-bottom: 10px; }
+  .dash-icon { background-color: #667eea; color: white; font-size: 14px; width: 30px; height: 30px; border-radius: 50%; text-align: center; line-height: 30px; margin-right: 10px; }
+  .dash-title { font-size: 12px; color: #6b7280; text-transform: uppercase; font-weight: 600; }
+  .dash-value { font-size: 24px; font-weight: bold; color: #1f2937; margin-bottom: 8px; }
+  .dash-mini { display: flex; font-size: 11px; color: #6b7280; }
+  .dash-mini-item { flex: 1; background: #f3f4f6; padding: 6px 8px; border-radius: 4px; text-align: center; margin-right: 6px; }
+  .dash-mini-item:last-child { margin-right: 0; }
+
+  /* Style 6: Pipeline Flow Chart */
+  .flow-chart { display: flex; gap: 8px; margin-top: 10px; }
+  .flow-box {
+    flex: 1; background: white; border: 2px solid #667eea; border-radius: 8px; padding: 10px; text-align: center;
+  }
+  .flow-number { font-size: 28px; font-weight: bold; color: #667eea; margin-bottom: 4px; }
+  .flow-label { font-size: 12px; color: #6b7280; margin-bottom: 8px; }
+  .flow-trend {
+    font-size: 10px; padding: 4px 8px; border-radius: 4px; display: inline-block; margin-bottom: 3px;
+  }
+  .up { background: #d1fae5; color: #065f46; }
+  .down { background: #fee2e2; color: #991b1b; }
+
+  /* Style 7: Metric Tiles with Icons */
+  .tile-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+  .metric-tile {
+    background: white; border-left: 5px solid #667eea; padding: 15px; border-radius: 8px; flex: 1 1 calc(50% - 10px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+  .tile-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .tile-name { font-size: 12px; color: #6b7280; text-transform: uppercase; margin-bottom: 4px; }
+  .tile-main { font-size: 24px; font-weight: bold; color: #1f2937; }
+  .tile-icon { font-size: 24px; }
+  .tile-comp { font-size: 10px; text-align: center; padding: 6px 8px; border-radius: 4px; margin-top: 6px;}
+  .green-text { color: #10b981; }
+  .red-text { color: #ef4444; }
+  .gray-text { color: #6b7280; }
+
+  /* Style 8: Progress Bar */
+  .progress-item {
+    background: #f9fafb; border-radius: 8px; padding: 10px; margin-bottom: 15px;
+  }
+  .progress-name { font-weight: 600; color: #1f2937; font-size: 14px; margin-bottom: 6px; }
+  .progress-bar-container {
+    height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; margin-bottom: 6px;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, #10b981, #059669); border-radius: 4px;
+  }
+  .progress-metrics { font-size: 11px; color: #6b7280; display: flex; justify-content: space-between; }
+
+  /* Style 9: Gauge Display */
+  .gauge-card { background: white; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb; text-align: center; margin-bottom: 15px; }
+  .gauge-title { font-size: 12px; color: #6b7280; text-transform: uppercase; margin-bottom: 10px; }
+  .gauge-display {
+    margin: 0 auto 10px;
+    width: 100px; height: 100px; border-radius: 50%; border: 10px solid #e5e7eb;
+    border-top-color: #10b981; border-right-color: #10b981; transform: rotate(45deg);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .gauge-value {
+    font-size: 24px; font-weight: bold; color: #1f2937; transform: rotate(-45deg);
+  }
+  .gauge-comparisons {
+    display: flex; justify-content: space-around; font-size: 11px;
+  }
+  .gauge-comp-label { color: #6b7280; }
+  .gauge-comp-val { font-weight: 600; color: #374151; }
+
+  /* Style 10: Timeline */
+  .timeline { position: relative; padding-left: 30px; }
+  .timeline-item { position: relative; margin-bottom: 20px; border-left: 3px solid #e5e7eb; padding-left: 12px; }
+  .timeline-dot {
+    position: absolute; left: -12px; top: 10px; width: 14px; height: 14px; border-radius: 50%; background: #667eea;
+    border: 3px solid white; box-shadow: 0 0 0 2px #667eea;
+  }
+  .timeline-content { background: #f9fafb; padding: 10px; border-radius: 8px; }
+  .timeline-header { font-weight: 600; color: #1f2937; font-size: 14px; margin-bottom: 4px; display: flex; justify-content: space-between; }
+  .timeline-value { font-size: 20px; font-weight: bold; color: #667eea; }
+  .timeline-stats { font-size: 11px; color: #6b7280; margin-top: 6px; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>💼 Crime Insurance - 10 Creative Visualization Styles</h1>
+    <p>November 25, 2025 | Unique views for Data Feed Status & Opportunity Funnel</p>
+  </div>
+
+  <!-- Style 1 -->
+  <div class="section">
+    <h2>Style 1: Traffic Light Status (Data Feed) + Funnel Visual (Opportunity)</h2>
+    <h3>🚦 Data Feed Status</h3>
+    <table class="traffic-grid" role="presentation" width="100%" cellspacing="10" cellpadding="0" border="0">
+      <tr>
+        <td class="traffic-item">
+          <div class="status-circle green">✓</div>
+          <div style="font-weight: bold; font-size: 20px;">1,247</div>
+          <div class="status-text">Yday: 1,185 (+5.2%)<br />7D: 1,221 (+2.1%)<br />30D: 1,263 (-1.3%)</div>
+        </td>
+        <td class="traffic-item">
+          <div class="status-circle green">✓</div>
+          <div style="font-weight: bold; font-size: 20px;">856</div>
+          <div class="status-text">Yday: 852 (+0.5%)<br />7D: 829 (+3.2%)<br />30D: 841 (+1.8%)</div>
+        </td>
+        <td class="traffic-item">
+          <div class="status-circle yellow">!</div>
+          <div style="font-weight: bold; font-size: 20px;">2,420</div>
+          <div class="status-text">Yday: 2,490 (-2.8%)<br />7D: 2,442 (-0.9%)<br />30D: 2,324 (+4.1%)</div>
+        </td>
+      </tr>
+    </table>
+    <h3 style="margin-top: 20px;">🎯 Opportunity Funnel</h3>
+    <div class="funnel-stage" style="width:100%"><div class="funnel-label">Total Accounts</div><div class="funnel-value">4,523</div><div class="funnel-compare">Yday: 4,452 (+1.6%) | 7D: 4,450 (+1.6%) | 30D: 4,357 (+3.8%)</div></div>
+    <div class="funnel-stage" style="width:85%"><div class="funnel-label">Qualified Prospects</div><div class="funnel-value">3,876</div><div class="funnel-compare">Yday: 3,796 (+2.1%) | 7D: 3,820 (+1.5%) | 30D: 3,766 (+2.9%)</div></div>
+    <div class="funnel-stage" style="width:65%"><div class="funnel-label">Target Market</div><div class="funnel-value">2,134</div><div class="funnel-compare">Yday: 2,211 (-3.5%) | 7D: 2,200 (-3.0%) | 30D: 2,160 (-1.2%)</div></div>
+    <div class="funnel-stage" style="width:45%"><div class="funnel-label">Quotes Sent</div><div class="funnel-value">156</div><div class="funnel-compare">Yday: 170 (-8.2%) | 7D: 180 (-13.3%) | 30D: 167 (-6.5%)</div></div>
+  </div>
+
+  <!-- Style 2 -->
+  <div class="section">
+    <h2>Style 2: Heartbeat Monitor (Data Feed) + Conversion Pathway (Opportunity)</h2>
+    <h3>💓 Data Feed Health Monitor</h3>
+    <div>
+      <div class="heartbeat-row">
+        <div class="hb-label">Daily Submissions</div>
+        <div class="hb-pulse">1,247</div>
+        <div class="hb-wave"></div>
+        <div class="hb-stats">Yday: +5.2%<br />7D: +2.1%<br />30D: -1.3%</div>
+      </div>
+      <div class="heartbeat-row">
+        <div class="hb-label">DOCAT Feed</div>
+        <div class="hb-pulse">856</div>
+        <div class="hb-wave"></div>
+        <div class="hb-stats">Yday: +0.5%<br />7D: +3.2%<br />30D: +1.8%</div>
+      </div>
+      <div class="heartbeat-row">
+        <div class="hb-label">P360 Accounts</div>
+        <div class="hb-pulse">2,420</div>
+        <div class="hb-wave warning"></div>
+        <div class="hb-stats">Yday: -2.8%<br />7D: -0.9%<br />30D: +4.1%</div>
+      </div>
+    </div>
+    <h3 style="margin-top: 20px;">🛤️ Conversion Pathway</h3>
+    <div class="pathway">
+      <div class="pathway-node">
+        <div class="pathway-circle">
+          4,523
+          <div class="label">TOTAL</div>
+        </div>
+        <div class="pathway-meta">+1.6% vs Yday<br />+1.6% vs 7D</div>
+      </div>
+      <div class="pathway-arrow">→</div>
+      <div class="pathway-node">
+        <div class="pathway-circle">
+          3,876
+          <div class="label">QUALIFIED</div>
+        </div>
+        <div class="pathway-meta">+2.1% vs Yday<br />+1.5% vs 7D</div>
+      </div>
+      <div class="pathway-arrow">→</div>
+      <div class="pathway-node">
+        <div class="pathway-circle">
+          2,134
+          <div class="label">TARGET</div>
+        </div>
+        <div class="pathway-meta">-3.5% vs Yday<br />-3.0% vs 7D</div>
+      </div>
+      <div class="pathway-arrow">→</div>
+      <div class="pathway-node">
+        <div class="pathway-circle">
+          156
+          <div class="label">QUOTED</div>
+        </div>
+        <div class="pathway-meta">-8.2% vs Yday<br />-13.3% vs 7D</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Style 3 -->
+  <div class="section">
+    <h2>Style 3: Status Dashboard (Data Feed) + Pipeline Flow (Opportunity)</h2>
+    <table class="dashboard-grid" role="presentation" width="100%" cellspacing="10" cellpadding="0" border="0">
+      <tr>
+        <td class="dash-card">
+          <div class="dash-header">
+            <div class="dash-icon">📥</div>
+            <div class="dash-title">Daily Submissions</div>
+          </div>
+          <div class="dash-value">1,247</div>
+          <div class="dash-mini">
+            <div class="dash-mini-item">Yday<br /><strong>+5.2%</strong></div>
+            <div class="dash-mini-item">7D<br /><strong>+2.1%</strong></div>
+            <div class="dash-mini-item">30D<br /><strong>-1.3%</strong></div>
+          </div>
+        </td>
+        <td class="dash-card">
+          <div class="dash-header">
+            <div class="dash-icon">🗂️</div>
+            <div class="dash-title">DOCAT Feed</div>
+          </div>
+          <div class="dash-value">856</div>
+          <div class="dash-mini">
+            <div class="dash-mini-item">Yday<br /><strong>+0.5%</strong></div>
+            <div class="dash-mini-item">7D<br /><strong>+3.2%</strong></div>
+            <div class="dash-mini-item">30D<br /><strong>+1.8%</strong></div>
+          </div>
+        </td>
+        <td class="dash-card">
+          <div class="dash-header">
+            <div class="dash-icon">💾</div>
+            <div class="dash-title">P360 Accounts</div>
+          </div>
+          <div class="dash-value">2,420</div>
+          <div class="dash-mini">
+            <div class="dash-mini-item">Yday<br /><strong>-2.8%</strong></div>
+            <div class="dash-mini-item">7D<br /><strong>-0.9%</strong></div>
+            <div class="dash-mini-item">30D<br /><strong>+4.1%</strong></div>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <h3 style="margin-top: 20px;">🔄 Pipeline Flow Chart</h3>
+    <div class="flow-chart">
+      <div class="flow-box">
+        <div class="flow-number">4,523</div>
+        <div class="flow-label">Total Accounts</div>
+        <div class="flow-trend up">Yday: +1.6%</div>
+        <div class="flow-trend up">7D: +1.6%</div>
+        <div class="flow-trend up">30D: +3.8%</div>
+      </div>
+      <div class="flow-box">
+        <div class="flow-number">3,876</div>
+        <div class="flow-label">Qualified</div>
+        <div class="flow-trend up">Yday: +2.1%</div>
+        <div class="flow-trend up">7D: +1.5%</div>
+        <div class="flow-trend up">30D: +2.9%</div>
+      </div>
+      <div class="flow-box">
+        <div class="flow-number">2,134</div>
+        <div class="flow-label">Target</div>
+        <div class="flow-trend down">Yday: -3.5%</div>
+        <div class="flow-trend down">7D: -3.0%</div>
+        <div class="flow-trend down">30D: -1.2%</div>
+      </div>
+      <div class="flow-box">
+        <div class="flow-number">156</div>
+        <div class="flow-label">Quotes</div>
+        <div class="flow-trend down">Yday: -8.2%</div>
+        <div class="flow-trend down">7D: -13.3%</div>
+        <div class="flow-trend down">30D: -6.5%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Style 4 -->
+  <div class="section">
+    <h2>Style 4: Icon Tiles (Data Feed) + Progress Bars (Opportunity)</h2>
+    <div class="tile-grid">
+      <div class="metric-tile">
+        <div class="tile-top">
+          <div><div class="tile-name">Daily Submissions</div><div class="tile-main">1,247</div></div>
+          <div class="tile-icon">📊</div>
+        </div>
+        <div class="tile-comp gray-text">Yday<br /><strong class="green-text">+5.2%</strong></div>
+        <div class="tile-comp gray-text">7D<br /><strong class="green-text">+2.1%</strong></div>
+        <div class="tile-comp gray-text">30D<br /><strong class="red-text">-1.3%</strong></div>
+      </div>
+      <div class="metric-tile">
+        <div class="tile-top">
+          <div><div class="tile-name">DOCAT Feed</div><div class="tile-main">856</div></div>
+          <div class="tile-icon">📂</div>
+        </div>
+        <div class="tile-comp gray-text">Yday<br /><strong class="green-text">+0.5%</strong></div>
+        <div class="tile-comp gray-text">7D<br /><strong class="green-text">+3.2%</strong></div>
+        <div class="tile-comp gray-text">30D<br /><strong class="green-text">+1.8%</strong></div>
+      </div>
+      <div class="metric-tile">
+        <div class="tile-top">
+          <div><div class="tile-name">P360 Accounts</div><div class="tile-main">2,420</div></div>
+          <div class="tile-icon">💿</div>
+        </div>
+        <div class="tile-comp gray-text">Yday<br /><strong class="red-text">-2.8%</strong></div>
+        <div class="tile-comp gray-text">7D<br /><strong class="red-text">-0.9%</strong></div>
+        <div class="tile-comp gray-text">30D<br /><strong class="green-text">+4.1%</strong></div>
+      </div>
+    </div>
+    <h3 style="margin-top: 20px;">Progress Bars</h3>
+    <div class="progress-item">
+      <div class="progress-name">Total Accounts</div>
+      <div class="progress-bar-container"><div class="progress-fill" style="width: 90%;"></div></div>
+      <div class="progress-metrics">
+        <div>Yday: +1.6%</div>
+        <div>7D: +1.6%</div>
+        <div>30D: +3.8%</div>
+      </div>
+    </div>
+    <div class="progress-item">
+      <div class="progress-name">Qualified Prospects</div>
+      <div class="progress-bar-container"><div class="progress-fill" style="width: 76%;"></div></div>
+      <div class="progress-metrics">
+        <div>Yday: +2.1%</div>
+        <div>7D: +1.5%</div>
+        <div>30D: +2.9%</div>
+      </div>
+    </div>
+    <div class="progress-item">
+      <div class="progress-name">Target Market</div>
+      <div class="progress-bar-container"><div class="progress-fill" style="width: 42%; background: #f59e0b;"></div></div>
+      <div class="progress-metrics">
+        <div>Yday: -3.5%</div>
+        <div>7D: -3.0%</div>
+        <div>30D: -1.2%</div>
+      </div>
+    </div>
+    <div class="progress-item">
+      <div class="progress-name">Quotes Sent</div>
+      <div class="progress-bar-container"><div class="progress-fill" style="width: 3.5%; background: #ef4444;"></div></div>
+      <div class="progress-metrics">
+        <div>Yday: -8.2%</div>
+        <div>7D: -13.3%</div>
+        <div>30D: -6.5%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Style 5: Gauge Display -->
+  <div class="section">
+    <h2>Style 5: Gauge Display</h2>
+    <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
+      <div class="gauge-card">
+        <div class="gauge-title">Total Accounts</div>
+        <div class="gauge-display"><div class="gauge-value">4,523</div></div>
+        <div class="gauge-comparisons">
+          <div class="gauge-comp"><span class="gauge-comp-label">Yday</span><span class="gauge-comp-val" style="color:#10b981;">+1.6%</span></div>
+          <div class="gauge-comp"><span class="gauge-comp-label">7D</span><span class="gauge-comp-val" style="color:#10b981;">+1.6%</span></div>
+          <div class="gauge-comp"><span class="gauge-comp-label">30D</span><span class="gauge-comp-val" style="color:#10b981;">+3.8%</span></div>
+        </div>
+      </div>
+      <div class="gauge-card">
+        <div class="gauge-title">Qualified</div>
+        <div class="gauge-display"><div class="gauge-value">3,876</div></div>
+        <div class="gauge-comparisons">
+          <div class="gauge-comp"><span class="gauge-comp-label">Yday</span><span class="gauge-comp-val" style="color:#10b981;">+2.1%</span></div>
+          <div class="gauge-comp"><span class="gauge-comp-label">7D</span><span class="gauge-comp-val" style="color:#10b981;">+1.5%</span></div>
+          <div class="gauge-comp"><span class="gauge-comp-label">30D</span><span class="gauge-comp-val" style="color:#10b981;">+2.9%</span></div>
+        </div>
+      </div>
+      <div class="gauge-card">
+        <div class="gauge-title">Target</div>
+        <div class="gauge-display"><div class="gauge-value">2,134</div></div>
+        <div class="gauge-comparisons">
+          <div class="gauge-comp"><span class="gauge-comp-label">Yday</span><span class="gauge-comp-val" style="color:#f59e0b;">-3.5%</span></div>
+          <div class="gauge-comp"><span class="gauge-comp-label">7D</span><span class="gauge-comp-val" style="color:#f59e0b;">-3.0%</span></div>
+          <div class="gauge-comp"><span class="gauge-comp-label">30D</span><span class="gauge-comp-val" style="color:#f59e0b;">-1.2%</span></div>
+        </div>
+      </div>
+      <div class="gauge-card">
+        <div class="gauge-title">Quotes</div>
+        <div class="gauge-display"><div class="gauge-value">156</div></div>
+        <div class="gauge-comparisons">
+          <div class="gauge-comp"><span class="gauge-comp-label">Yday</span><span class="gauge-comp-val" style="color:#ef4444;">-8.2%</span></div>
+          <div class="gauge-comp"><span class="gauge-comp-label">7D</span><span class="gauge-comp-val" style="color:#ef4444;">-13.3%</span></div>
+          <div class="gauge-comp"><span class="gauge-comp-label">30D</span><span class="gauge-comp-val" style="color:#ef4444;">-6.5%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Style 6: Timeline View -->
+  <div class="section">
+    <h2>Style 6: Timeline View</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-header"><span>Daily Submissions</span><span class="timeline-value">1,247</span></div>
+          <div class="timeline-stats">
+            <span>Yday: +5.2%</span>
+            <span>7D: +2.1%</span>
+            <span>30D: -1.3%</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-header"><span>DOCAT Feed</span><span class="timeline-value">856</span></div>
+          <div class="timeline-stats">
+            <span>Yday: +0.5%</span>
+            <span>7D: +3.2%</span>
+            <span>30D: +1.8%</span>
+          </div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-header"><span>P360 Accounts</span><span class="timeline-value">2,420</span></div>
+          <div class="timeline-stats">
+            <span>Yday: -2.8%</span>
+            <span>7D: -0.9%</span>
+            <span>30D: +4.1%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Style 7: Metric Tiles -->
+  <div class="section">
+    <h2>Style 7: Metric Tiles with Icons</h2>
+    <div class="tile-grid">
+      <div class="metric-tile">
+        <div class="tile-top">
+          <div>
+            <div class="tile-name">Daily Submissions</div>
+            <div class="tile-main">1,247</div>
+          </div>
+          <div class="tile-icon">📊</div>
+        </div>
+        <div class="tile-comp gray-text">Yday<br /><strong class="green-text">+5.2%</strong></div>
+        <div class="tile-comp gray-text">7D<br /><strong class="green-text">+2.1%</strong></div>
+        <div class="tile-comp gray-text">30D<br /><strong class="red-text">-1.3%</strong></div>
+      </div>
+      <div class="metric-tile">
+        <div class="tile-top">
+          <div>
+            <div class="tile-name">DOCAT Feed</div>
+            <div class="tile-main">856</div>
+          </div>
+          <div class="tile-icon">📂</div>
+        </div>
+        <div class="tile-comp gray-text">Yday<br /><strong class="green-text">+0.5%</strong></div>
+        <div class="tile-comp gray-text">7D<br /><strong class="green-text">+3.2%</strong></div>
+        <div class="tile-comp gray-text">30D<br /><strong class="green-text">+1.8%</strong></div>
+      </div>
+      <div class="metric-tile">
+        <div class="tile-top">
+          <div>
+            <div class="tile-name">P360 Accounts</div>
+            <div class="tile-main">2,420</div>
+          </div>
+          <div class="tile-icon">💿</div>
+        </div>
+        <div class="tile-comp gray-text">Yday<br /><strong class="red-text">-2.8%</strong></div>
+        <div class="tile-comp gray-text">7D<br /><strong class="red-text">-0.9%</strong></div>
+        <div class="tile-comp gray-text">30D<br /><strong class="green-text">+4.1%</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Style 8: Progress Indicator (repeated from Style 4 for demonstration) -->
+  <div class="section">
+    <h2>Style 8: Progress Indicator</h2>
+    <div class="progress-item">
+      <div class="progress-name">Total Accounts</div>
+      <div class="progress-bar-container"><div class="progress-fill" style="width: 90%;"></div></div>
+      <div class="progress-metrics">
+        <div>Yday: +1.6%</div>
+        <div>7D: +1.6%</div>
+        <div>30D: +3.8%</div>
+      </div>
+    </div>
+    <div class="progress-item">
+      <div class="progress-name">Qualified Prospects</div>
+      <div class="progress-bar-container"><div class="progress-fill" style="width: 76%;"></div></div>
+      <div class="progress-metrics">
+        <div>Yday: +2.1%</div>
+        <div>7D: +1.5%</div>
+        <div>30D: +2.9%</div>
+      </div>
+    </div>
+    <div class="progress-item">
+      <div class="progress-name">Target Market</div>
+      <div class="progress-bar-container"><div class="progress-fill" style="width: 42%; background: #f59e0b;"></div></div>
+      <div class="progress-metrics">
+        <div>Yday: -3.5%</div>
+        <div>7D: -3.0%</div>
+        <div>30D: -1.2%</div>
+      </div>
+    </div>
+    <div class="progress-item">
+      <div class="progress-name">Quotes Sent</div>
+      <div class="progress-bar-container"><div class="progress-fill" style="width: 3.5%; background: #ef4444;"></div></div>
+      <div class="progress-metrics">
+        <div>Yday: -8.2%</div>
+        <div>7D: -13.3%</div>
+        <div>30D: -6.5%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Style 9 and Style 10 are integrated above already, so for email scope, we end here -->
+
+</div>
+</body>
+</html>
