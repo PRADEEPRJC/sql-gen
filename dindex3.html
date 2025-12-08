@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:40px 20px}
+.container{max-width:900px;margin:0 auto}
+.header{text-align:center;color:#fff;margin-bottom:40px}
+.header h1{font-size:36px;margin-bottom:10px;text-shadow:2px 2px 4px rgba(0,0,0,0.2)}
+.date{font-size:16px;opacity:0.9}
+.nav{display:flex;justify-content:center;gap:15px;margin-bottom:30px;flex-wrap:wrap}
+.nav-btn{background:rgba(255,255,255,0.2);color:#fff;border:2px solid #fff;padding:12px 24px;border-radius:25px;cursor:pointer;font-size:14px;font-weight:600;transition:all 0.3s;backdrop-filter:blur(10px)}
+.nav-btn:hover,.nav-btn.active{background:#fff;color:#667eea;transform:translateY(-2px)}
+.visual{display:none;animation:fadeIn 0.5s}
+.visual.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* Visual 1: Funnel Cards */
+.funnel-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.funnel-card{background:#fff;border-radius:15px;padding:25px;box-shadow:0 8px 20px rgba(0,0,0,0.15);position:relative;overflow:hidden}
+.funnel-card::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,#667eea,#764ba2)}
+.funnel-card h3{color:#667eea;margin-bottom:20px;font-size:22px}
+.funnel-metric{display:flex;justify-content:space-between;align-items:center;margin:12px 0;padding:10px;background:#f8f9ff;border-radius:8px}
+.funnel-metric.main{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-size:18px;font-weight:bold}
+.metric-label{font-size:13px;color:#666}
+.funnel-metric.main .metric-label{color:#fff;opacity:0.95}
+.metric-value{font-weight:bold;font-size:20px;color:#667eea}
+.funnel-metric.main .metric-value{color:#fff}
+
+/* Visual 2: Progress Bars */
+.progress-section{background:#fff;border-radius:15px;padding:30px;box-shadow:0 8px 20px rgba(0,0,0,0.15)}
+.progress-item{margin-bottom:30px}
+.progress-item:last-child{margin-bottom:0}
+.progress-header{display:flex;justify-content:space-between;margin-bottom:10px}
+.progress-title{font-size:20px;font-weight:bold;color:#333}
+.progress-bars{display:grid;gap:12px}
+.bar-row{display:flex;align-items:center;gap:15px}
+.bar-label{min-width:140px;font-size:13px;color:#666;font-weight:600}
+.bar-container{flex:1;background:#f0f0f0;height:30px;border-radius:15px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:15px;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;color:#fff;font-weight:bold;font-size:12px;transition:width 1s ease}
+.bar-fill.c1{background:linear-gradient(90deg,#667eea,#764ba2)}
+.bar-fill.c2{background:linear-gradient(90deg,#f093fb,#f5576c)}
+.bar-fill.c3{background:linear-gradient(90deg,#4facfe,#00f2fe)}
+.bar-fill.c4{background:linear-gradient(90deg,#43e97b,#38f9d7)}
+.bar-fill.c5{background:linear-gradient(90deg,#fa709a,#fee140)}
+
+/* Visual 3: Circular Stats */
+.circular-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:25px}
+.circular-card{background:#fff;border-radius:15px;padding:25px;box-shadow:0 8px 20px rgba(0,0,0,0.15);text-align:center}
+.circular-card h3{color:#667eea;margin-bottom:20px;font-size:22px}
+.circle-container{display:flex;justify-content:center;margin:20px 0}
+.circle{width:140px;height:140px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;position:relative}
+.circle-1{background:linear-gradient(135deg,#667eea,#764ba2);box-shadow:0 4px 15px rgba(102,126,234,0.4)}
+.circle-2{background:linear-gradient(135deg,#f093fb,#f5576c);box-shadow:0 4px 15px rgba(240,147,251,0.4)}
+.circle-3{background:linear-gradient(135deg,#4facfe,#00f2fe);box-shadow:0 4px 15px rgba(79,172,254,0.4)}
+.circle-main{font-size:36px;font-weight:bold;color:#fff}
+.circle-label{font-size:11px;color:#fff;opacity:0.9;margin-top:5px}
+.mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+.mini-stat{background:#f8f9ff;padding:10px;border-radius:8px;font-size:12px}
+.mini-stat-value{font-size:18px;font-weight:bold;color:#667eea;margin-top:5px}
+
+/* Visual 4: Comparison Dashboard */
+.dashboard{background:#fff;border-radius:15px;padding:30px;box-shadow:0 8px 20px rgba(0,0,0,0.15)}
+.dashboard-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:25px}
+.dashboard-item{text-align:center;padding:20px;background:#f8f9ff;border-radius:12px;transition:transform 0.3s}
+.dashboard-item:hover{transform:scale(1.05)}
+.dashboard-label{font-size:12px;color:#666;margin-bottom:8px;text-transform:uppercase;font-weight:600}
+.dashboard-value{font-size:28px;font-weight:bold;color:#667eea}
+.comparison-bars{margin-top:20px}
+.comp-bar{margin:15px 0}
+.comp-label{font-size:14px;color:#333;font-weight:600;margin-bottom:8px}
+.comp-bar-container{display:flex;gap:10px;align-items:center}
+.comp-segment{height:40px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:13px;border-radius:6px;transition:all 0.5s}
+
+/* Visual 5: Gradient Cards with Icons */
+.icon-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.icon-card{background:#fff;border-radius:15px;padding:0;box-shadow:0 8px 20px rgba(0,0,0,0.15);overflow:hidden}
+.icon-header{padding:25px;color:#fff;position:relative;overflow:hidden}
+.icon-header::before{content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:rgba(255,255,255,0.1);border-radius:50%;transition:all 0.6s}
+.icon-card:hover .icon-header::before{top:-30%;right:-30%}
+.icon-header.h1{background:linear-gradient(135deg,#667eea,#764ba2)}
+.icon-header.h2{background:linear-gradient(135deg,#f093fb,#f5576c)}
+.icon-header.h3{background:linear-gradient(135deg,#4facfe,#00f2fe)}
+.icon-title{font-size:24px;font-weight:bold;margin-bottom:5px}
+.icon-subtitle{font-size:14px;opacity:0.9}
+.icon-body{padding:20px}
+.icon-stat{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f0f0f0}
+.icon-stat:last-child{border-bottom:none}
+.stat-name{color:#666;font-size:13px}
+.stat-value{font-weight:bold;color:#333;font-size:16px}
+.icon-footer{background:#f8f9ff;padding:15px 20px;display:flex;justify-content:space-between;align-items:center}
+.footer-label{font-size:12px;color:#666;font-weight:600}
+.footer-value{font-size:24px;font-weight:bold;color:#667eea}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>📊 Finlines Prospect Funnel</h1>
+<div class="date">Report Date: November 28, 2025</div>
+</div>
+<div class="nav">
+<button class="nav-btn active" onclick="showVisual(1)">Funnel Cards</button>
+<button class="nav-btn" onclick="showVisual(2)">Progress Bars</button>
+<button class="nav-btn" onclick="showVisual(3)">Circular Stats</button>
+<button class="nav-btn" onclick="showVisual(4)">Dashboard</button>
+<button class="nav-btn" onclick="showVisual(5)">Gradient Cards</button>
+</div>
+
+<!-- Visual 1: Funnel Cards -->
+<div class="visual active" id="v1">
+<div class="funnel-cards">
+<div class="funnel-card">
+<h3>🔒 Crime</h3>
+<div class="funnel-metric"><span class="metric-label">Total Accounts</span><span class="metric-value">263</span></div>
+<div class="funnel-metric"><span class="metric-label">Eligible Accounts</span><span class="metric-value">182</span></div>
+<div class="funnel-metric"><span class="metric-label">Target Accounts</span><span class="metric-value">41</span></div>
+<div class="funnel-metric"><span class="metric-label">Rejection Count</span><span class="metric-value">233</span></div>
+<div class="funnel-metric main"><span class="metric-label">Total Prospects</span><span class="metric-value">30</span></div>
+</div>
+<div class="funnel-card">
+<h3>⚖️ EPL</h3>
+<div class="funnel-metric"><span class="metric-label">Total Accounts</span><span class="metric-value">263</span></div>
+<div class="funnel-metric"><span class="metric-label">Eligible Accounts</span><span class="metric-value">182</span></div>
+<div class="funnel-metric"><span class="metric-label">Target Accounts</span><span class="metric-value">35</span></div>
+<div class="funnel-metric"><span class="metric-label">Rejection Count</span><span class="metric-value">236</span></div>
+<div class="funnel-metric main"><span class="metric-label">Total Prospects</span><span class="metric-value">27</span></div>
+</div>
+<div class="funnel-card">
+<h3>🛡️ Fiduciary</h3>
+<div class="funnel-metric"><span class="metric-label">Total Accounts</span><span class="metric-value">263</span></div>
+<div class="funnel-metric"><span class="metric-label">Eligible Accounts</span><span class="metric-value">182</span></div>
+<div class="funnel-metric"><span class="metric-label">Target Accounts</span><span class="metric-value">15</span></div>
+<div class="funnel-metric"><span class="metric-label">Rejection Count</span><span class="metric-value">251</span></div>
+<div class="funnel-metric main"><span class="metric-label">Total Prospects</span><span class="metric-value">12</span></div>
+</div>
+</div>
+</div>
+
+<!-- Visual 2: Progress Bars -->
+<div class="visual" id="v2">
+<div class="progress-section">
+<div class="progress-item">
+<div class="progress-header"><span class="progress-title">🔒 Crime</span></div>
+<div class="progress-bars">
+<div class="bar-row"><span class="bar-label">Total Accounts</span><div class="bar-container"><div class="bar-fill c1" style="width:100%">263</div></div></div>
+<div class="bar-row"><span class="bar-label">Eligible Accounts</span><div class="bar-container"><div class="bar-fill c2" style="width:69.2%">182</div></div></div>
+<div class="bar-row"><span class="bar-label">Target Accounts</span><div class="bar-container"><div class="bar-fill c3" style="width:15.6%">41</div></div></div>
+<div class="bar-row"><span class="bar-label">Rejection Count</span><div class="bar-container"><div class="bar-fill c4" style="width:88.6%">233</div></div></div>
+<div class="bar-row"><span class="bar-label">Total Prospects</span><div class="bar-container"><div class="bar-fill c5" style="width:11.4%">30</div></div></div>
+</div>
+</div>
+<div class="progress-item">
+<div class="progress-header"><span class="progress-title">⚖️ EPL</span></div>
+<div class="progress-bars">
+<div class="bar-row"><span class="bar-label">Total Accounts</span><div class="bar-container"><div class="bar-fill c1" style="width:100%">263</div></div></div>
+<div class="bar-row"><span class="bar-label">Eligible Accounts</span><div class="bar-container"><div class="bar-fill c2" style="width:69.2%">182</div></div></div>
+<div class="bar-row"><span class="bar-label">Target Accounts</span><div class="bar-container"><div class="bar-fill c3" style="width:13.3%">35</div></div></div>
+<div class="bar-row"><span class="bar-label">Rejection Count</span><div class="bar-container"><div class="bar-fill c4" style="width:89.7%">236</div></div></div>
+<div class="bar-row"><span class="bar-label">Total Prospects</span><div class="bar-container"><div class="bar-fill c5" style="width:10.3%">27</div></div></div>
+</div>
+</div>
+<div class="progress-item">
+<div class="progress-header"><span class="progress-title">🛡️ Fiduciary</span></div>
+<div class="progress-bars">
+<div class="bar-row"><span class="bar-label">Total Accounts</span><div class="bar-container"><div class="bar-fill c1" style="width:100%">263</div></div></div>
+<div class="bar-row"><span class="bar-label">Eligible Accounts</span><div class="bar-container"><div class="bar-fill c2" style="width:69.2%">182</div></div></div>
+<div class="bar-row"><span class="bar-label">Target Accounts</span><div class="bar-container"><div class="bar-fill c3" style="width:5.7%">15</div></div></div>
+<div class="bar-row"><span class="bar-label">Rejection Count</span><div class="bar-container"><div class="bar-fill c4" style="width:95.4%">251</div></div></div>
+<div class="bar-row"><span class="bar-label">Total Prospects</span><div class="bar-container"><div class="bar-fill c5" style="width:4.6%">12</div></div></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Visual 3: Circular Stats -->
+<div class="visual" id="v3">
+<div class="circular-grid">
+<div class="circular-card">
+<h3>🔒 Crime</h3>
+<div class="circle-container"><div class="circle circle-1"><span class="circle-main">30</span><span class="circle-label">PROSPECTS</span></div></div>
+<div class="mini-stats">
+<div class="mini-stat">Total<div class="mini-stat-value">263</div></div>
+<div class="mini-stat">Eligible<div class="mini-stat-value">182</div></div>
+<div class="mini-stat">Target<div class="mini-stat-value">41</div></div>
+<div class="mini-stat">Rejected<div class="mini-stat-value">233</div></div>
+</div>
+</div>
+<div class="circular-card">
+<h3>⚖️ EPL</h3>
+<div class="circle-container"><div class="circle circle-2"><span class="circle-main">27</span><span class="circle-label">PROSPECTS</span></div></div>
+<div class="mini-stats">
+<div class="mini-stat">Total<div class="mini-stat-value">263</div></div>
+<div class="mini-stat">Eligible<div class="mini-stat-value">182</div></div>
+<div class="mini-stat">Target<div class="mini-stat-value">35</div></div>
+<div class="mini-stat">Rejected<div class="mini-stat-value">236</div></div>
+</div>
+</div>
+<div class="circular-card">
+<h3>🛡️ Fiduciary</h3>
+<div class="circle-container"><div class="circle circle-3"><span class="circle-main">12</span><span class="circle-label">PROSPECTS</span></div></div>
+<div class="mini-stats">
+<div class="mini-stat">Total<div class="mini-stat-value">263</div></div>
+<div class="mini-stat">Eligible<div class="mini-stat-value">182</div></div>
+<div class="mini-stat">Target<div class="mini-stat-value">15</div></div>
+<div class="mini-stat">Rejected<div class="mini-stat-value">251</div></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Visual 4: Comparison Dashboard -->
+<div class="visual" id="v4">
+<div class="dashboard">
+<div class="dashboard-grid">
+<div class="dashboard-item"><div class="dashboard-label">Total Accounts</div><div class="dashboard-value">263</div></div>
+<div class="dashboard-item"><div class="dashboard-label">Eligible</div><div class="dashboard-value">182</div></div>
+<div class="dashboard-item"><div class="dashboard-label">Total Prospects</div><div class="dashboard-value">69</div></div>
+</div>
+<div class="comparison-bars">
+<div class="comp-bar">
+<div class="comp-label">Target Accounts Distribution</div>
+<div class="comp-bar-container">
+<div class="comp-segment" style="width:45%;background:linear-gradient(135deg,#667eea,#764ba2)">Crime: 41</div>
+<div class="comp-segment" style="width:38.5%;background:linear-gradient(135deg,#f093fb,#f5576c)">EPL: 35</div>
+<div class="comp-segment" style="width:16.5%;background:linear-gradient(135deg,#4facfe,#00f2fe)">Fiduciary: 15</div>
+</div>
+</div>
+<div class="comp-bar">
+<div class="comp-label">Total Prospects Distribution</div>
+<div class="comp-bar-container">
+<div class="comp-segment" style="width:43.5%;background:linear-gradient(135deg,#667eea,#764ba2)">Crime: 30</div>
+<div class="comp-segment" style="width:39.1%;background:linear-gradient(135deg,#f093fb,#f5576c)">EPL: 27</div>
+<div class="comp-segment" style="width:17.4%;background:linear-gradient(135deg,#4facfe,#00f2fe)">Fiduciary: 12</div>
+</div>
+</div>
+<div class="comp-bar">
+<div class="comp-label">Rejection Count Distribution</div>
+<div class="comp-bar-container">
+<div class="comp-segment" style="width:32.4%;background:linear-gradient(135deg,#667eea,#764ba2)">Crime: 233</div>
+<div class="comp-segment" style="width:32.8%;background:linear-gradient(135deg,#f093fb,#f5576c)">EPL: 236</div>
+<div class="comp-segment" style="width:34.8%;background:linear-gradient(135deg,#4facfe,#00f2fe)">Fiduciary: 251</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Visual 5: Gradient Cards with Icons -->
+<div class="visual" id="v5">
+<div class="icon-cards">
+<div class="icon-card">
+<div class="icon-header h1">
+<div class="icon-title">🔒 Crime</div>
+<div class="icon-subtitle">Insurance Coverage Analysis</div>
+</div>
+<div class="icon-body">
+<div class="icon-stat"><span class="stat-name">Total Accounts</span><span class="stat-value">263</span></div>
+<div class="icon-stat"><span class="stat-name">Eligible Accounts</span><span class="stat-value">182</span></div>
+<div class="icon-stat"><span class="stat-name">Target Accounts</span><span class="stat-value">41</span></div>
+<div class="icon-stat"><span class="stat-name">Rejection Count</span><span class="stat-value">233</span></div>
+</div>
+<div class="icon-footer"><span class="footer-label">TOTAL PROSPECTS</span><span class="footer-value">30</span></div>
+</div>
+<div class="icon-card">
+<div class="icon-header h2">
+<div class="icon-title">⚖️ EPL</div>
+<div class="icon-subtitle">Employment Practices Liability</div>
+</div>
+<div class="icon-body">
+<div class="icon-stat"><span class="stat-name">Total Accounts</span><span class="stat-value">263</span></div>
+<div class="icon-stat"><span class="stat-name">Eligible Accounts</span><span class="stat-value">182</span></div>
+<div class="icon-stat"><span class="stat-name">Target Accounts</span><span class="stat-value">35</span></div>
+<div class="icon-stat"><span class="stat-name">Rejection Count</span><span class="stat-value">236</span></div>
+</div>
+<div class="icon-footer"><span class="footer-label">TOTAL PROSPECTS</span><span class="footer-value">27</span></div>
+</div>
+<div class="icon-card">
+<div class="icon-header h3">
+<div class="icon-title">🛡️ Fiduciary</div>
+<div class="icon-subtitle">Fiduciary Liability Coverage</div>
+</div>
+<div class="icon-body">
+<div class="icon-stat"><span class="stat-name">Total Accounts</span><span class="stat-value">263</span></div>
+<div class="icon-stat"><span class="stat-name">Eligible Accounts</span><span class="stat-value">182</span></div>
+<div class="icon-stat"><span class="stat-name">Target Accounts</span><span class="stat-value">15</span></div>
+<div class="icon-stat"><span class="stat-name">Rejection Count</span><span class="stat-value">251</span></div>
+</div>
+<div class="icon-footer"><span class="footer-label">TOTAL PROSPECTS</span><span class="footer-value">12</span></div>
+</div>
+</div>
+</div>
+</div>
+<script>
+function showVisual(n){
+document.querySelectorAll('.visual').forEach(v=>v.classList.remove('active'));
+document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+document.getElementById('v'+n).classList.add('active');
+document.querySelectorAll('.nav-btn')[n-1].classList.add('active');
+}
+</script>
+</body>
+</html>
