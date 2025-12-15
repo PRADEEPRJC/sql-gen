@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finlines Prospect Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-purple: #8b5cf6;
+            --border-color: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Section */
+        header {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .header-content h1 {
+            font-size: 28px;
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .header-content p {
+            margin: 5px 0 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .date-badge {
+            background-color: var(--card-bg);
+            padding: 8px 16px;
+            border-radius: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Grid Layout */
+        .products-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        /* Product Card Styles */
+        .product-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+        }
+
+        .product-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f9fafb;
+        }
+
+        .product-title {
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .crime-accent { color: var(--accent-blue); border-left: 4px solid var(--accent-blue); }
+        .epl-accent { color: var(--accent-purple); border-left: 4px solid var(--accent-purple); }
+        .fiduciary-accent { color: var(--accent-green); border-left: 4px solid var(--accent-green); }
+
+        .metrics-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            padding: 20px;
+            gap: 20px;
+        }
+
+        /* Individual Metric Item */
+        .metric-item {
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .metric-item:hover {
+            background-color: #f9fafb;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: 0.02em;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        /* Highlight specific metrics */
+        .highlight-prospects .metric-value { color: var(--accent-green); }
+        .highlight-rejection .metric-value { color: var(--accent-red); }
+
+        /* Mini Stats (7D / 30D) */
+        .mini-stats {
+            display: flex;
+            gap: 8px;
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        .stat-badge {
+            background-color: #f3f4f6;
+            padding: 4px 6px;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            line-height: 1.2;
+            width: 100%;
+        }
+
+        .stat-label {
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        
+        .stat-val {
+            white-space: nowrap;
+        }
+
+        /* Status indicators for funnel visualization */
+        .funnel-step {
+            position: relative;
+        }
+        
+        .funnel-step::after {
+            content: "→";
+            position: absolute;
+            right: -15px;
+            top: 40%;
+            color: var(--border-color);
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 900px) {
+            .funnel-step::after {
+                display: none;
+            }
+        }
+
+        /* Final item shouldn't have arrow */
+        .metrics-container > div:last-child::after {
+            display: none;
+        }
+        /* Rejection count shouldn't have arrow to next usually, but layout grid makes it tricky. 
+           We'll rely on visual grouping instead of strict arrows for responsive safety. 
+        */
+        .funnel-step::after { display: none; } /* Disabled arrows for cleaner grid */
+
+
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <header>
+            <div class="header-content">
+                <h1>Finlines Dashboard</h1>
+                <p>Prospect Funnel Overview</p>
+            </div>
+            <div class="date-badge">
+                📅 2025-11-28
+            </div>
+        </header>
+
+        <div class="products-grid">
+
+            <!-- CRIME Product Card -->
+            <div class="product-card crime-accent">
+                <div class="product-header">
+                    <span class="product-title">Crime</span>
+                    <span style="font-size: 12px; color: var(--text-secondary);">Product ID: CRM-01</span>
+                </div>
+                <div class="metrics-container">
+                    <div class="metric-item">
+                        <span class="metric-label">Total Accounts</span>
+                        <span class="metric-value">263</span>
+                        <div class="mini-stats">
+                            <div class="stat-badge">
+                                <span class="stat-label">7D</span>
+                                <span class="stat-val">+10 / 5%</span>
+                            </div>
+                            <div class="stat-badge">
+                                <span class="stat-label">30D</span>
+                                <span class="stat-val">+10 / 5%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <span class="metric-label">Eligible</span>
+                        <span class="metric-value">182</span>
+                        <div class="mini-stats">
+                            <div class="stat-badge"><span class="stat-label">7D</span><span class="stat-val">+10 / 5%</span></div>
+                            <div class="stat-badge"><span class="stat-label">30D</span><span class="stat-val">+10 / 5%</span></div>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <span class="metric-label">Target</span>
+                        <span class="metric-value">41</span>
+                        <div class="mini-stats">
+                            <div class="stat-badge"><span class="stat-label">7D</span><span class="stat-val">+10 / 5%</span></div>
+                            <div class="stat-badge"><span class="stat-label">30D</span><span class="stat-val">+10 / 5%</span></div>
+                        </div>
+                    </div>
+
+                    <div class="metric-item highlight-rejection">
+                        <span class="metric-label">Rejections</span>
+                        <span class="metric-value">233</span>
+                        <div class="mini-stats">
+                            <div class="stat-badge"><span class="stat-label">7D</span><span class="stat-val">+10 / 5%</span></div>
+                            <div class="stat-badge"><span class="stat-label">30D</span><span class="stat-val">+10 / 5%</span></div>
+                        </div>
+                    </div>
+
+                    <div class="metric-item highlight-prospects">
+                        <span class="metric-label">Total Prospects</span>
+                        <span class="metric-value">30</span>
+                        <div class="mini-stats">
+                            <div class="stat-badge"><span class="stat-label">7D</span><span class="stat-val">+10 / 5%</span></div>
+                            <div class="stat-badge"><span class="stat-label">30D</span><span class="stat-val">+10 / 5%</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EPL Product Card -->
+            <div class="product-card epl-accent">
+                <div class="product-header">
+                    <span class="product-title">EPL</span>
+                    <span style="font-size: 12px; color: var(--text-secondary);">Product ID: EPL-02</span>
+                </div>
+                <div class="metrics-container">
+                    <div class="metric-item">
+                        <span class="metric-label">Total Accounts</span>
+                        <span class="metric-value">263</span>
+                        <div class="mini-stats">
+                            <div class="stat-badge"><span class="stat-label">7D</span><span class="stat-val">+10 / 5%</span></div>
+                            <div class="stat-badge"><span class="stat-label">30D</span><span class="stat-val">+10 / 5%</span></div>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <span class="metric-label">Eligible</span>
+                        <span class="metric-value">182</span>
+                        <div class="mini-stats">
+                            <div class="stat-badge"><span class="stat-label">7D</span><span class="stat-val">+10 / 5%</span></div>
+                            <div class="stat-badge"><span class="stat-label">30D</span><span class="stat-val">+10 / 5%</span></div>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <span class="metric-label">Target</span>
+                        <span class="metric-value">35</span>
+                        <div class="mini-stats">
+                            <div class="stat-badge"><span class="stat-label">7D</span><span class="stat-val">+10 / 5%</span></div>
+                            <div class="stat-badge"><span class="stat-label">30D</span><span class="stat-val">+10 / 5%</span></div>
+                        </div>
+                    </div>
+
+                    <div class="metric-item highlight-rejection">
+                        <span class="metric-label">Rejections</span>
+                        <span class="metric-value">236</span>
+                        <div class="mini-stats">
+                            <div class="stat-badge"><span class="stat-label">7D</span><span class="stat-val">+10 / 5%</span></div>
+                            <div class="stat-badge"><span class="stat-label">30D</span><span class="stat-val">+10 / 5%</span></div>
+                        </div>
+                    </div>
+
+                    <div class="metric-item highlight-prospects">
+                        <span class="metric-label">Total Prospects</span>
+                        <span class="metric-value">27</span>
+                        <div class="mini-stats">
+                            <div class="stat-badge"><span class="stat-label">7D</span><span class="stat-val">+10 / 5%</span></div>
+                            <div class="stat-badge"><span class="stat-label">30D</span><span class="stat-val">+10 / 5%</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FIDUCIARY Product Card -->
+            <div class="product-card fiduciary-accent">
+                <div class="product-header">
+                    <span class="product-title">Fiduciary</span>
+                    <span style="font-size: 12px; color: var(--text-secondary);">Product ID: FID-03</span>
+                </div>
+                <div class="metrics-container">
+                    <div class="metric-item">
+                        <span class="metric-label">Total Accounts</span>
+                        <span class="metric-value">263</span>
+                        <div class="mini-stats">
+                            <div class="stat-badge"><span class="stat-label">7D</span><span class="stat-val">+10 / 5%</span></div>
+                            <div class="stat-badge"><span class="stat-label">30D</span><span class="stat-val">+10 / 5%</span></div>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <span class="metric-label">Eligible</span>
+                        <span class="metric-value">182</span>
+                        <div class="mini-stats">
+                            <div class="stat-badge"><span class="stat-label">7D</span><span class="stat-val">+10 / 5%</span></div>
+                            <div class="stat-badge"><span class="stat-label">30D</span><span class="stat-val">+10 / 5%</span></div>
+                        </div>
+                    </div>
+
+                    <div class="metric-item">
+                        <span class="metric-label">Target</span>
+                        <span class="metric-value">15</span>
+                        <div class="mini-stats">
+                            <div class="stat-badge"><span class="stat-label">7D</span><span class="stat-val">+10 / 5%</span></div>
+                            <div class="stat-badge"><span class="stat-label">30D</span><span class="stat-val">+10 / 5%</span></div>
+                        </div>
+                    </div>
+
+                    <div class="metric-item highlight-rejection">
+                        <span class="metric-label">Rejections</span>
+                        <span class="metric-value">251</span>
+                        <div class="mini-stats">
+                            <div class="stat-badge"><span class="stat-label">7D</span><span class="stat-val">+10 / 5%</span></div>
+                            <div class="stat-badge"><span class="stat-label">30D</span><span class="stat-val">+10 / 5%</span></div>
+                        </div>
+                    </div>
+
+                    <div class="metric-item highlight-prospects">
+                        <span class="metric-label">Total Prospects</span>
+                        <span class="metric-value">12</span>
+                        <div class="mini-stats">
+                            <div class="stat-badge"><span class="stat-label">7D</span><span class="stat-val">+10 / 5%</span></div>
+                            <div class="stat-badge"><span class="stat-label">30D</span><span class="stat-val">+10 / 5%</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
